@@ -1,5 +1,5 @@
 ####################################################
-### Authors:  Moreno Bevilacqua, Víctor Morales Oñate.
+### Authors:  Moreno Bevilacqua, Victor Morales-Onate.
 ### Email: moreno.bevilacqua@uv.cl, victor.morales@uv.cl
 ### Instituto de Estadistica
 ### Universidad de Valparaiso
@@ -126,14 +126,28 @@ CompLik <- function(bivariate, coordx, coordy ,coordt,coordx_dyn,corrmodel, data
     if(bivariate) fname <- paste(fname,"_biv",sep="")
     fname <- paste(fname,"2",sep="")
     path.parent <- getwd()
-    if(!is.null(GPU)) 
+    # if(!is.null(GPU)) 
+    # {
+    #   path <- system.file("CL", "Kernel.cl", package = "GeoModels")
+    #   path <- gsub("/Kernel.cl","/",path);setwd(path)
+    #   fname <- paste(fname,"_OCL",sep="")
+    #   # print(fname)
+    #   # print(path)
+    #   .C("create_binary_kernel",  as.integer(GPU),as.character(fname),  PACKAGE='GeoModels',DUP = TRUE, NAOK=TRUE)
+    # }
+    if(!is.null(GPU))
     {
-      path <- system.file("CL", "Kernel.cl", package = "GeoModels")
-      path <- gsub("/Kernel.cl","/",path);setwd(path)
       fname <- paste(fname,"_OCL",sep="")
       # print(fname)
+      path <- system.file("CL", paste(fname,".cl",sep = ""), package = "GeoModels")
       # print(path)
-      .C("create_binary_kernel",  as.integer(GPU),as.character(fname),  PACKAGE='GeoModels',DUP = TRUE, NAOK=TRUE)
+      path <- gsub(paste("/",paste(fname,".cl",sep = ""),sep = ""),"/",path)
+      # print(path)
+      setwd(path)
+      
+      
+      # print(path)
+      # .C("create_binary_kernel",  as.integer(GPU),as.character(fname),  PACKAGE='GeoModels',DUP = TRUE, NAOK=TRUE)
     }
 
     if(grid)    {a=expand.grid(coordx,coordy);coordx=a[,1];coordy=a[,2]; }

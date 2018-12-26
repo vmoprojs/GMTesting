@@ -1,5 +1,5 @@
 ######################################################
-### Authors: Moreno Bevilacqua, Víctor Morales Oñate.
+### Authors: Moreno Bevilacqua, Victor Morales-Onate.
 ### Emails:  moreno.bevilacqua@uv.cl, victor.morales@uv.cl
 ### Institutions: 
 ### Universidad de Valparaiso

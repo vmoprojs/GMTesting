@@ -899,7 +899,7 @@ End
 #include <OpenCL/opencl.h>
 #include <unistd.h>
 #else
-#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
+//#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 #include <CL/cl.h>
 #endif
 
@@ -945,6 +945,10 @@ void exec_kernel_source(double *h_x, double *h_y, double *h_mean, double *h_data
                         int *local_wi, int *dev, double *res, char *f_name);
 void exec_kernel_st_dyn(double *h_x, double *h_y,double *h_t, double *h_mean, double *h_data, int *int_par,double *dou_par,
                         int *local_wi, int *dev, double *res, char *f_name,int *ns, int *NS);
+void exec_kernel_st_dyn_source(double *h_x, double *h_y, double *h_t, double *h_mean, double *h_data, int *int_par, double *dou_par,
+	int *local_wi, int *dev, double *res, char *f_name, int *ns, int *NS);
+void exec_kernel_st_source(double *h_x, double *h_y, double *h_t, double *h_mean, double *h_data, int *int_par, double *dou_par,
+	int *local_wi, int *dev, double *res, char *f_name, int *ns, int *NS);
 void cdf_norm_call(double *lim1,double *lim2,double *a11,double *a12, double *res);
 
 

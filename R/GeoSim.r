@@ -1,5 +1,5 @@
 ####################################################
-### Authors: Moreno Bevilacqua, Víctor Morales Oñate.
+### Authors: Moreno Bevilacqua, Victor Morales-Onate.
 ### Email: moreno.bevilacqua@uv.cl, victor.morales@uv.cl
 ### Universidad de Valparaiso, Departamento de Estad?stica
 ### File name: Simulation.r

@@ -1,5 +1,5 @@
 ####################################################
-### Authors:  Moreno Bevilacqua, Víctor Morales Oñate.
+### Authors:  Moreno Bevilacqua, Victor Morales-Onate.
 ### Email:  moreno.bevilacqua@uv.cl, victor.morales@uv.cl
 ### Departamento de Estadistica
 ### Universidad de Valparaiso
@@ -1373,4 +1373,9 @@ StartParam <- function(coordx, coordy, coordt,coordx_dyn, corrmodel, data, dista
 DeviceInfo <- function()
 {
     .C("DeviceInfo",PACKAGE='GeoModels',DUP = TRUE, NAOK=TRUE)
+}
+
+PlatformInfo <- function()
+{
+  .C("PlatformInfo",PACKAGE='GeoModels',DUP = TRUE, NAOK=TRUE)
 }
