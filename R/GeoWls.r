@@ -1,5 +1,5 @@
 ####################################################
-### Authors: Moreno Bevilacqua, Victor Morales-Onate.
+### Authors: Moreno Bevilacqua, Víctor Morales Oñate.
 ### Email:  moreno.bevilacqua@uv.cl, victor.morales@uv.cl
 ### Instituto de Estadistica
 ### Universidad de Valparaiso
@@ -8,7 +8,7 @@
 ### This file contains a set of procedures in order
 ### to estimate the parameters of some covariance
 ### function models for a given dataset.
-### Last change: 28/03/2017.
+### Last change: 28/03/2020.
 ####################################################
 
 
@@ -46,9 +46,9 @@ print.GeoWLS <- function(x, digits = max(3, getOption("digits") - 3), ...)
 
 
 WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance, fcall, fixed, grid,
-                    likelihood, maxdist, maxtime, model, n, param, parscale,
+                    likelihood, maxdist, neighb,maxtime, model, n, param, parscale,
                     paramrange, radius, start, taper, tapsep, type, varest, vartype,
-                    weighted, winconst,winconst_t, winstp_t, winstp,X)
+                    weighted, winconst,winconst_t, winstp_t, winstp,X,memdist)
   {
     # Determines the range of the parameters for a given correlation
     SetRangeParam <- function(namesparam, numparam)
@@ -81,8 +81,15 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
                  namesparam[i]==paste('mean',17,sep="")||
                  namesparam[i]==paste('mean',18,sep="")||
                  namesparam[i]==paste('mean',19,sep="")||
-                 namesparam[i]==paste('mean',20,sep="")
-                 ){
+                 namesparam[i]==paste('mean',20,sep="")||
+                 namesparam[i]==paste('mean',21,sep="")||
+                 namesparam[i]==paste('mean',22,sep="")||
+                 namesparam[i]==paste('mean',23,sep="")||
+                 namesparam[i]==paste('mean',24,sep="")||
+                 namesparam[i]==paste('mean',25,sep="")
+                 )
+
+              {
                 lower <- c(lower, -big)
                 upper <- c(upper, big)}   
             if(namesparam[i]=='skew'){
@@ -95,6 +102,12 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
                 lower <- c(lower, 0)
                 upper <- c(upper, big)}
             if(namesparam[i]=='nugget'){
+                lower <- c(lower, low)
+                upper <- c(upper, big)}
+             if(namesparam[i]=='nugget1'){
+                lower <- c(lower, low)
+                upper <- c(upper, big)}
+          if(namesparam[i]=='nugget2'){
                 lower <- c(lower, low)
                 upper <- c(upper, big)}
             if(namesparam[i]=='power'){
@@ -143,33 +156,42 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
    
     ### Initialization parameters:
     initparam <- StartParam(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance, fcall, fixed,
-                           grid, likelihood, maxdist, maxtime, model, n, 
+                           grid, likelihood, maxdist,neighb, maxtime, model, n, 
                            param, parscale, paramrange, radius,  start, taper, tapsep,
                            "GeoWLS", type, varest, vartype,
-                           weighted, winconst,winconst_t, winstp_t, winstp, X)
+                           weighted, winconst,winconst_t, winstp_t, winstp, X, memdist)
+
+    
   
     if(!is.null(initparam$error))     stop(initparam$error)
-    
-    #if(is.null(X))  {X=1;num_betas=1}
-    #else num_betas=ncol(X)
-
     if(length(coordt)>0&&is.list(X)) X=X[[1]]
-    if(is.null(X))  {X=1;num_betas=1} 
-    else num_betas=ncol(X)  
 
+    bivariate<-CheckBiv(CkCorrModel(corrmodel))
+    
+    if(!bivariate) {if(is.null(X))  {X=1;num_betas=1} 
+                    else num_betas=ncol(X)  }
 
+    if( bivariate) {if(is.null(X))  {X=1;num_betas=c(1,1)} 
+                    else 
+                   { if(is.list(X)) num_betas=c(ncol(X[[1]]),ncol(X[[2]])) 
+                     else num_betas=c(ncol(X),ncol(X))
+                    } } 
+
+    
     ### Set the initial type of likelihood objects:
     initparam$type <- CkType(type)
    # if(substr(model,1,6)=='Binary'||substr(model,1,8)=='Binomial'||substr(model,1,11)=='BinomialNeg'||substr(model,1,4)=='Geom'||substr(model,1,4)=='Pois') return(initparam)
     if(is.null(start)) start <- NA else start <- unlist(start)
     if(is.null(fixed)) fixed <- NA else fixed <- unlist(fixed)
     ### Checks if all the starting values have been passed by the user:
+
     if(initparam$numstart==initparam$numparam) {
 
-
-
-        if((model %in% c('Gaussian','Gauss','Chisq','LogLogistic','Logistic','Gamma','Gamma2','LogGaussian','LogGauss',
-          'Weibull','SkewGaussian','SkewGauss','SinhAsinh','StudentT',"TwoPieceStudentT",'Wrapped',"TwoPieceGaussian","TwoPieceGauss")) & 
+        if((model %in% c('Gaussian','Gauss','Chisq','LogLogistic','Logistic','Gamma','Gamma2','Beta','LogGaussian','LogGauss','Binomial_TwoPieceGaussian','Binomial_TwoPieceGauss',
+          'Tukeygh','Tukeyh','Tukeyh2','Kumaraswamy','Kumaraswamy2','Weibull','SkewGaussian','SkewGauss','SinhAsinh','StudentT','SkewStudentT',
+          "Gaussian_misp_StudentT","Gaussian_misp_Poisson","Gaussian_misp_Tukeygh",
+          "Gaussian_misp_SkewStudentT",#"Poisson",
+          "TwoPieceStudentT",'Wrapped',"TwoPieceGaussian","TwoPieceGauss","TwoPieceTukeyh","TwoPieceBimodal")) & 
           (type %in% c('Standard','Pairwise','Tapering')))
         {
 ##########################################################        
@@ -204,6 +226,7 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
           }}   
 ################################################################################################################################################
      if(initparam$bivariate) {           ###bivariate case
+   
               if(is.na(fixed["mean_1"])){
               if(is.na(start["mean_1"])) {initparam$param <- c(initparam$fixed["mean_1"], initparam$param)}
               else {initparam$param <- c(start["mean_1"], initparam$param)}
@@ -215,6 +238,7 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
               if(initparam$numfixed > 0) {initparam$fixed <- fixed}
               else {initparam$fixed <- NULL}}
               else { initparam$fixed['mean_1'] <- fixed["mean_1"] }
+
               if(is.na(fixed["mean_2"])){
               initparam$namesparam<-names(initparam$namesparam)
               if(is.na(start["mean_2"])) {initparam$param <- c(initparam$fixed["mean_2"], initparam$param)}
@@ -226,10 +250,36 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
               initparam$numfixed <- initparam$numfixed-1
               if(initparam$numfixed > 0) {initparam$fixed <- fixed}
               else {initparam$fixed <- NULL}}
-              else {initparam$fixed['mean_2'] <- fixed["mean_2"]}
-              }
-            }
-
+              else {initparam$fixed['mean_2'] <- fixed["mean_2"]}  
+        if(num_betas[1]>1){
+          for(i in 1:(num_betas[1]-1)) {
+            if(is.na(fixed[paste("mean_1",i,sep="")]))
+          {
+              if(is.na(start[paste("mean_1",i,sep="")])) {initparam$param <- c(initparam$fixed[paste("mean_1",i,sep="")], initparam$param)}
+              else {initparam$param <- c(start[paste("mean_1",i,sep="")], initparam$param)}
+            initparam$namesparam <- sort(names(initparam$param))
+            initparam$param <- initparam$param[initparam$namesparam]
+            initparam$numparam <- initparam$numparam+1
+            initparam$flagnuis[paste("mean_1",i,sep="")] <- 1
+            initparam$numfixed <- initparam$numfixed-1}
+            else {initparam$fixed[paste("mean_1",i,sep="")] <- fixed[paste("mean_1",i,sep="")]} 
+         }}
+           if(num_betas[2]>1){
+          for(i in 1:(num_betas[2]-1)) {
+            if(is.na(fixed[paste("mean_2",i,sep="")]))
+          {
+              if(is.na(start[paste("mean_2",i,sep="")])) {initparam$param <- c(initparam$fixed[paste("mean_2",i,sep="")], initparam$param)}
+              else {initparam$param <- c(start[paste("mean_2",i,sep="")], initparam$param)}
+            initparam$namesparam <- sort(names(initparam$param))
+            initparam$param <- initparam$param[initparam$namesparam]
+            initparam$numparam <- initparam$numparam+1
+            initparam$flagnuis[paste("mean_2",i,sep="")] <- 1
+            initparam$numfixed <- initparam$numfixed-1}
+            else {initparam$fixed[paste("mean_2",i,sep="")] <- fixed[paste("mean_2",i,sep="")]} 
+         }}}
+###########################
+              
+        }
         paramrange=TRUE
         if(paramrange) paramrange <- SetRangeParam(names(initparam$param), length(initparam$param))
         else  paramrange <- list(lower=NULL, upper=NULL)
@@ -246,7 +296,7 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
 ####################################################################################################################
 ####################################################################################################################
 GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, corrmodel, distance="Eucl",
-                         fixed=NULL,grid=FALSE, maxdist=NULL, maxtime=NULL, model='Gaussian',
+                         fixed=NULL,grid=FALSE, maxdist=NULL, neighb=NULL,maxtime=NULL, model='Gaussian',
                          optimizer='Nelder-Mead', numbins=NULL, radius=6371,  start=NULL,
                          weighted=FALSE)
   {
@@ -291,9 +341,9 @@ GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, cor
     ### Initializes the parameter values:
     parscale <- NULL
     initparam <- StartParam(coordx, coordy, coordt, coordx_dyn,corrmodel, data, distance, "Fitting", fixed, grid,
-    'None', maxdist, maxtime,  model, NULL,  NULL,
+    'None', maxdist, neighb,maxtime,  model, NULL,  NULL,
                            parscale, optimizer=='L-BFGS-B', radius, start,NULL,  NULL,
-                           'GeoWLS', 'GeoWLS', FALSE, 'SubSamp', FALSE, 1, 1,1,1, NULL)
+                           'GeoWLS', 'GeoWLS', FALSE, 'SubSamp', FALSE, 1, 1,1,1, NULL,0)
     if(!is.null(initparam$error))
       stop(initparam$error)
      coordx=initparam$coordx

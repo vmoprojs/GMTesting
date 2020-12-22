@@ -8,10 +8,10 @@
 }
 \usage{
 StartParam(coordx, coordy, coordt,coordx_dyn, corrmodel, data, distance, fcall, 
-          fixed, grid,likelihood,  maxdist, maxtime, model, n,  param, 
+          fixed, grid,likelihood,  maxdist, neighb, maxtime, model, n,  param, 
           parscale, paramrange, radius,  start, taper, tapsep,
           type,typereal,varest, vartype, weighted, winconst,
-          winstp, winconst_t, winstp_t,X)
+          winstp, winconst_t, winstp_t,X,memdist)
 }
 \arguments{
  \item{coordx}{A numeric (\eqn{d \times 2}{d x 2})-matrix (where
@@ -43,6 +43,9 @@ StartParam(coordx, coordy, coordt,coordx_dyn, corrmodel, data, distance, fcall,
   \item{maxdist}{Numeric; an optional positive value indicating the maximum
     spatial distance considered in the composite-likelihood
     computation.}
+        \item{neighb}{Numeric; an optional positive integer indicating the 
+    order of neighborhood  in the composite likelihood
+    computation. See the Section \bold{Details} for more information.}
   \item{maxtime}{Numeric; an optional positive value indicating the maximum
     temporal lag considered in the composite-likelihood
     computation.} 
@@ -84,6 +87,8 @@ StartParam(coordx, coordy, coordt,coordx_dyn, corrmodel, data, distance, fcall,
  \item{winstp_t}{Numeric; a value in \eqn{(0,1]} for defining the the proportion of 
       overlapping in the temporal  sub-sampling procedure.}
     \item{X}{Numeric; Matrix of space-time covariates.}   
+        \item{memdist}{ Logical; if \code{TRUE} then  the distances in the  composite likelihood 
+      are computed before  the optmization. }
 }
 
 \seealso{\code{\link{GeoFit}}}

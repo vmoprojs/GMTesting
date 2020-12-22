@@ -1,7 +1,7 @@
 \name{GeoCovmatrix}
 \alias{GeoCovmatrix}
 \encoding{UTF-8}
-\title{Spatial and Spatio-temporal (tapered) Covariance Matrix}
+\title{Spatial and Spatio-temporal Covariance Matrix of (non) Gaussian random fields}
 \description{
   The function computes the  covariance matrix associated to 
   a spatial or spatio-temporal or a bivariate spatial Gaussian or non Gaussian randomm field
@@ -143,10 +143,6 @@ The associated parameters in the argument \code{param} are
     \deqn{R(h)  =e^{-h}}
     This model is a special case of the \code{Matern} and the \code{Stable} model.
 
-    \item \eqn{Gauss} defined as:
-    \deqn{R(h) = e^{-h^2}} 
-    This model is a special case of the \code{stable} model.
-
     \item \eqn{GenCauchy} (generalised \eqn{Cauchy}) defined as:
     \deqn{R(h) = ( 1+h^{\alpha} )^{-\beta / \alpha}} 
       If \eqn{h} is the geodesic distance then \eqn{\alpha \in (0,1]}.
@@ -179,6 +175,13 @@ The associated parameters in the argument \code{param} are
      \deqn{R(h) = \int_h^{1}[(1-x)^{\mu-1} (x^{2}-h^{2})^{\kappa-1}1(h \in [0,1]) ]dx / B(2\kappa+1,\mu) }
       where   \eqn{\mu \geq 0.5(d+1)+\kappa}.
      The cases \eqn{\kappa=0,1,2} correspond to the \eqn{Wend0}, \eqn{Wend1} and \eqn{Wend2} respectively. 
+
+    \item \eqn{GenWendMatern} (Generalized Wendland Matern) defined as:
+     \deqn{R(h) = \int_h^{1}[(1-x/a)^{\mu-1} ((x/a)^{2}-h^{2})^{\kappa-1}1(h \in [0,a]) ]dx / B(2\kappa+1,\mu) }
+      where   \eqn{\mu \geq 0.5(d+1)+\kappa} and \eqn{a=(\Gamma(\mu+1+2\kappa)/\Gamma(\mu))^(1/(1+2\kappa))}
+      The inverse parametrization  is used for the \eqn{\mu} parameter.
+     
+
 
       \item \eqn{Multiquadric} defined as:
     \deqn{R(h) = (1-\alpha0.5)^{2\beta}/(1+(\alpha0.5)^{2}-\alpha cos(h))^{\beta}, \quad h \in [0,\pi]}
@@ -276,6 +279,7 @@ The associated parameters in the argument \code{param} are
      \item  \eqn{Bi}\code{_}\eqn{Wendx} (Bivariate  full Wendland model) 
        \item  \eqn{Bi}\code{_}\eqn{Wendx}\code{_}\eqn{contr} (Bivariate  Wendland model with contrainsts) 
           \item  \eqn{Bi}\code{_}\eqn{Wendx}\code{_}\eqn{sep} (Bivariate  separable Wendland model) 
+          \item  \eqn{Bi}\code{_}\eqn{Smoke} (Bivariate  full Smoke model on the unit sphere) 
     }
 
 
@@ -451,9 +455,9 @@ library(spam)
 ###############################################################
 
 # Define the spatial-coordinates of the points:
-x <- runif(500, 0, 1)
-y <- runif(500, 0, 1)
-coords <- cbind(x,y)
+x = runif(500, 0, 1)
+y = runif(500, 0, 1)
+coords = cbind(x,y)
 
 
 # Correlation Parameters for Matern model 
@@ -462,29 +466,14 @@ CorrParam("Matern")
 # Matern Parameters 
 param=list(smooth=0.5,sill=1,scale=0.2,nugget=0)
 
-matrix1 <- GeoCovmatrix(coordx=coords, corrmodel="Matern", param=param)
+matrix1 = GeoCovmatrix(coordx=coords, corrmodel="Matern", param=param)
 dim(matrix1$covmatrix)
 
-################################################################
-###
-### Example 2. Spatial tapered Covariance matrix associated to
-### a Matern correlation model
-###
-###############################################################
-
-
-matrix2 <- GeoCovmatrix(coordx=coords, corrmodel="Matern", param=param,
-                     maxdist=0.2,taper="Wendland1",type="Tapering")
-# Tapered covariance matrix
-as.matrix(matrix2$covmatrix)[1:15,1:15]
-
-# Percentage of no zero values in the tapered matrix
-matrix2$nozero
 
 
 ################################################################
 ###
-### Example 3. Spatial covariance matrix associated to
+### Example 2. Spatial covariance matrix associated to
 ### a Generalized Wendland correlation model
 ###
 ###############################################################
@@ -493,7 +482,7 @@ matrix2$nozero
 param=list(sill=1,scale=0.2,nugget=0,smooth=0,power2=4)
 
 
-matrix3 <- GeoCovmatrix(coordx=coords, corrmodel="GenWend", param=param,sparse=TRUE)
+matrix3 = GeoCovmatrix(coordx=coords, corrmodel="GenWend", param=param,sparse=TRUE)
 
 # Percentage of no zero values in the tapered matrix
 matrix3$nozero
@@ -501,7 +490,7 @@ matrix3$nozero
 
 ################################################################
 ###
-### Example 4. Spatial covariance matrix associated to
+### Example 3. Spatial covariance matrix associated to
 ### a Generalized Cauchy correlation model
 ###
 ###############################################################
@@ -512,20 +501,20 @@ param=list(sill=1,scale=0.2,nugget=0,power1=1,power2=1)
 # Correlation Parameters for Gen Cauchy model
 CorrParam("GenCauchy")
 
-matrix4 <- GeoCovmatrix(coordx=coords, corrmodel="GenCauchy", param=param)
+matrix4 = GeoCovmatrix(coordx=coords, corrmodel="GenCauchy", param=param)
 
 matrix4$covmatrix[1:4,1:4]
 
 
 ################################################################
 ###
-### Example 5. Covariance matrix associated to
+### Example 4. Covariance matrix associated to
 ### a space-time double exponential correlation model
 ###
 ###############################################################
 
 # Define the temporal-coordinates:
-times <- seq(1, 4, 1)
+times = seq(1, 4, 1)
 
 # Define covariance parameters
 param=list(scale_s=0.3,scale_t=0.5,sill=1)
@@ -534,39 +523,36 @@ param=list(scale_s=0.3,scale_t=0.5,sill=1)
 CorrParam("Exp_Exp")
 
 # Simulation of a spatial Gaussian random field:
-matrix5 <- GeoCovmatrix(coordx=coords, coordt=times, corrmodel="Exp_Exp",
+matrix5 = GeoCovmatrix(coordx=coords, coordt=times, corrmodel="Exp_Exp",
                      param=param)
 
 dim(matrix5$covmatrix)
 
 ################################################################
 ###
-### Example 6. Covariance matrix associated to
+### Example 5. Covariance matrix associated to
 ### a  skew gaussian RF with Exp correlation model
 ###
 ###############################################################
 
-
 param=list(sill=1,scale=0.3/3,nugget=0,skew=4)
 # Simulation of a spatial Gaussian random field:
-matrix6 <- GeoCovmatrix(coordx=coords,  corrmodel="Exp", param=param, 
+matrix6 = GeoCovmatrix(coordx=coords,  corrmodel="Exp", param=param, 
                      model="SkewGaussian")
 
 # covariance matrix
 matrix6$covmatrix[1:10,1:10]
 
-
 ################################################################
 ###
-### Example 7. Covariance matrix associated to
+### Example 6. Covariance matrix associated to
 ### a  Weibull RF with Genwend correlation model
 ###
 ###############################################################
 
-
 param=list(sill=1,scale=0.3,nugget=0,shape=4,mean=0,smooth=1,power2=5)
 # Simulation of a spatial Gaussian random field:
-matrix7 <- GeoCovmatrix(coordx=coords,  corrmodel="GenWend", param=param, 
+matrix7 = GeoCovmatrix(coordx=coords,  corrmodel="GenWend", param=param, 
                      sparse=TRUE,model="Weibull")
 
 # covariance matrix
@@ -575,15 +561,14 @@ matrix7$nozero
 
 ################################################################
 ###
-### Example 8. Covariance matrix associated to
+### Example 7. Covariance matrix associated to
 ### a  binomial gaussian RF with Wendland correlation model
 ###
 ###############################################################
 
-
 param=list(sill=1,scale=0.2,nugget=0,power2=4)
 # Simulation of a spatial Gaussian random field:
-matrix8 <- GeoCovmatrix(coordx=coords,  corrmodel="Wend0", param=param,n=5, 
+matrix8 = GeoCovmatrix(coordx=coords,  corrmodel="Wend0", param=param,n=5, 
                      model="Binomial")
 
 # covariance matrix
@@ -593,25 +578,25 @@ matrix8$covmatrix[1:10,1:10]
 
 ################################################################
 ###
-### Example 9.  Covariance matrix associated to
+### Example 8.  Covariance matrix associated to
 ### a bivariate Matern exponential correlation model
 ###
 ###############################################################
 
 set.seed(8)
 # Define the spatial-coordinates of the points:
-x <- runif(10, -1, 1)
-y <- runif(10, -1, 1)
-coords <- cbind(x,y)
+x = runif(10, -1, 1)
+y = runif(10, -1, 1)
+coords = cbind(x,y)
 
 # Parameters 
 param=list(scale=0.3,mean_1=0,mean_2=0,sill_1=1,sill_2=1,
              nugget_1=0,nugget_2=0,smooth=0.5,pcol=-0.25)
 
 # Covariance matrix 
-matrix9 <- GeoCovmatrix(coordx=coords, corrmodel="Bi_matern_sep", param=param)$covmatrix
+matrix9 = GeoCovmatrix(coordx=coords, corrmodel="Bi_matern_sep", param=param)$covmatrix
 
-head(matrix8)
+head(matrix9)
 
 
 

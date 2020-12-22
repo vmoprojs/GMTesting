@@ -1,14 +1,14 @@
 \name{GeoVariogram}
 \alias{GeoVariogram}
 \encoding{UTF-8}
-\title{Empirical Variogram(variants) estimation}
+\title{Empirical Variogram estimation}
 \description{
   The function returns an empirical estimate of the  variogram  for spatio (temporal)  and bivariate 
   random fields. 
 }
 \usage{
 GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, cloud=FALSE,
-           distance='Eucl', grid=FALSE, maxdist=NULL,
+           distance='Eucl', grid=FALSE, maxdist=NULL,neighb=NULL,
            maxtime=NULL, numbins=NULL, radius=6371,  
            type='variogram',bivariate=FALSE)
 }
@@ -44,6 +44,9 @@ GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, cloud=FALS
     non-equispaced spatial sites.}
   \item{maxdist}{A numeric value denoting the spatial maximum distance,
    see the Section \bold{Details}.}
+   \item{neighb}{Numeric; an optional positive integer indicating the 
+    order of neighborhood  in the composite likelihood
+    computation. See the Section \bold{Details} for more information.}
    \item{maxtime}{A numeric value denoting the temporal maximum distance,
    see the Section \bold{Details}.}
   \item{numbins}{A numeric value denoting the numbers of bins, see the
@@ -108,6 +111,8 @@ GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, cloud=FALS
                  If no spatial distance is specified then it is NULL;}
   \item{maxtime}{The maximum temporal distance used for the calculation of the variogram.
                 If no temporal distance is specified then it is NULL;}
+  \item{spacetime_dyn}{If the space-time variogram is obtained using dynamical coordinates
+  then it is(\code{TRUE}).   }
   \item{variograms}{The empirical spatial variogram;}
   \item{variogramst}{The empirical spatial-temporal variogram;}
   \item{variogramt}{The empirical temporal variogram;}
@@ -141,22 +146,22 @@ library(GeoModels)
 ###############################################################
 set.seed(514)
 # Set the coordinates of the sites:
-x <- runif(200, 0, 1)
-y <- runif(200, 0, 1)
-coords <- cbind(x,y)
+x = runif(200, 0, 1)
+y = runif(200, 0, 1)
+coords = cbind(x,y)
 # Set the model's parameters:
-corrmodel <- "exponential"
-mean <- 0
-sill <- 1
-nugget <- 0
-scale <- 0.3/3
+corrmodel = "exponential"
+mean = 0
+sill = 1
+nugget = 0
+scale = 0.3/3
 
 # Simulation of the spatial Gaussian random field:
-data <- GeoSim(coordx=coords, corrmodel=corrmodel, param=list(mean=mean,
+data = GeoSim(coordx=coords, corrmodel=corrmodel, param=list(mean=mean,
               sill=sill, nugget=nugget, scale=scale))$data
 
 # Empirical spatial semi-variogram estimation:
-fit <- GeoVariogram(coordx=coords,data=data,maxdist=0.6)
+fit = GeoVariogram(coordx=coords,data=data,maxdist=0.6)
 
 # Results:
 plot(fit$centers, fit$variograms, xlab='h', ylab=expression(gamma(h)),
@@ -175,18 +180,18 @@ plot(fit$centers, fit$variograms, xlab='h', ylab=expression(gamma(h)),
 set.seed(331)
 # Define the temporal sequence:
 # Set the coordinates of the sites:
-x <- runif(400, 0, 1)
-y <- runif(400, 0, 1)
-coords <- cbind(x,y)
-times <- seq(1,5,1)
+x = runif(200, 0, 1)
+y = runif(200, 0, 1)
+coords = cbind(x,y)
+times = seq(1,10,1)
 
 # Simulation of a spatio-temporal Gaussian random field:
-data <- GeoSim(coordx=coords, coordt=times, corrmodel="gneiting",
-              param=list(mean=0,scale_s=0.1,scale_t=0.1,sill=1,
+data = GeoSim(coordx=coords, coordt=times, corrmodel="gneiting",
+              param=list(mean=0,scale_s=0.08,scale_t=0.4,sill=1,
               nugget=0,power_s=1,power_t=1,sep=0.5))$data
 
 # Empirical spatio-temporal semi-variogram estimation:
-fit <- GeoVariogram(data=data, coordx=coords, coordt=times, maxtime=5,maxdist=0.5)
+fit = GeoVariogram(data=data, coordx=coords, coordt=times, maxtime=7,maxdist=0.5)
 
 # Results: Marginal spatial empirical  semi-variogram
 par(mfrow=c(2,2), mai=c(.5,.5,.3,.3), mgp=c(1.4,.5, 0))
@@ -200,12 +205,12 @@ plot(fit$bint, fit$variogramt, xlab='t', ylab=expression(gamma(t)),
      pch=20,main="Marginal temporal semi-variogram",cex.axis=.8)
 
 # Building space-time semi-variogram
-st.vario <- matrix(fit$variogramst,length(fit$centers),length(fit$bint))
-st.vario <- cbind(c(0,fit$variograms), rbind(fit$variogramt,st.vario))
+st.vario = matrix(fit$variogramst,length(fit$centers),length(fit$bint))
+st.vario = cbind(c(0,fit$variograms), rbind(fit$variogramt,st.vario))
 
 # Results: 3d Spatio-temporal semi-variogram
 require(scatterplot3d)
-st.grid <- expand.grid(c(0,fit$centers),c(0,fit$bint))
+st.grid = expand.grid(c(0,fit$centers),c(0,fit$bint))
 scatterplot3d(st.grid[,1], st.grid[,2], c(st.vario),
               highlight.3d=TRUE, xlab="h",ylab="t",
               zlab=expression(gamma(h,t)), pch=20,
@@ -229,19 +234,18 @@ persp(c(0,fit$centers), c(0,fit$bint), st.vario,
 ###
 ###############################################################
 # Simulation of a bivariate spatial Gaussian random field:
-set.seed(29)
+set.seed(293)
 # Define the spatial-coordinates of the points:
-x <- runif(200, 0, 1)
-set.seed(7)
-y <- runif(200, 0, 1)
+x = runif(400, 0, 1)
+y = runif(400, 0, 1)
 coords=cbind(x,y)
 
 # Simulation of a bivariate Gaussian Random field 
 # with matern (cross)  covariance function
-param=list(mean_1=0,mean_2=0,scale_1=0.15/3,scale_2=0.2/3,scale_12=0.15/3,
+param=list(mean_1=0,mean_2=0,scale_1=0.1/3,scale_2=0.15/3,scale_12=0.15/3,
            sill_1=1,sill_2=1,nugget_1=0,nugget_2=0,
-           smooth_1=0.5,smooth_12=0.5,smooth_2=0.5,pcol=-0.45)  
-data <- GeoSim(coordx=coords, corrmodel="Bi_matern", param=param)$data
+           smooth_1=0.5,smooth_12=0.5,smooth_2=0.5,pcol=0.3)  
+data = GeoSim(coordx=coords, corrmodel="Bi_matern", param=param)$data
 
 # Empirical  semi-(cross)variogram estimation:
 biv_vario=GeoVariogram(data,coordx=coords, bivariate=TRUE,maxdist=c(0.5,0.5,0.5))  

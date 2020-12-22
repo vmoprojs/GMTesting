@@ -1,10 +1,10 @@
 ######################################################
-### Authors: Moreno Bevilacqua, Victor Morales-Onate.
+### Authors: Moreno Bevilacqua, Víctor Morales Oñate.
 ### Emails:  moreno.bevilacqua@uv.cl, victor.morales@uv.cl
 ### Institutions: 
 ### Universidad de Valparaiso
 ### File name: GeoTests.r
-### Description:
+### Description: 
 ### This file contains a set of procedures
 ### for the computation of composite likelihood-based
 ### statistics and tests.
@@ -178,8 +178,9 @@ StatiTest <- function(df, model1, model2, statistic)
         if(model1$likelihood %in% c("Full"))
   {
       if(statistic=='Wald'){
+
               theta <- model1$param[namesparam]-model2$fixed[namesparam]
-              varcov <- model1$varcov[namesparam,namesparam]# Restricted variance-covariance matrix
+              varcov <- model1$varcov[namesparam,namesparam]
               W <- t(theta)%*%solve(varcov)%*%theta
               nu <- df}
        if(statistic=="Wilks"){
