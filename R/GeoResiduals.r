@@ -1,12 +1,16 @@
 
-
+####################################################
+### File name: GeoResiduals.r
+####################################################
 
 GeoResiduals<-function(fit)
 
 {
-if(class(fit)!="GeoFit") stop("A GeoFit object is needed as input\n")
+if(!inherits(fit,"GeoFit"))  stop("A GeoFit object is needed as input\n")
 ######
 
+fit$param=unlist(fit$param)
+fit$fixed=unlist(fit$fixed)
 model=fit$model        #type of model
 num_betas=fit$numbetas  #number of mean parameters
 
@@ -24,6 +28,7 @@ beta2=as.numeric(nuisance[sel])
 ## names of estimated and fixed parameters
 nm=names(fit$param)
 nf=names(fit$fixed)
+copula=fit$copula
 
 #################################
 #### computing mean ########
@@ -37,7 +42,24 @@ if(is.list(fit$coordx_dyn)) dd=unlist(fit$data)
 else dd=c(t(fit$data))
 
 
-
+############################################################
+if(!is.null(copula)){    #### copula models
+if(copula=="Clayton"||copula=="Gaussian")
+         {
+if(model=="Beta2")
+             {
+              mm=c(1/(1+exp(-mu)))
+              sh=as.numeric(param['shape']);  
+              res1=pbeta(dd,mm*sh,(1-mm)*sh)
+             }
+if(model=="Kumaraswamy2") {
+             mm=c(1/(1+exp(-mu))); 
+             sh=as.numeric(param['shape']);
+             ga= (log(1-mm^sh)/log(0.5))^{-1}
+             res1=(1-dd^ga)^(sh) }
+          }
+}
+else {           #### non-copula models
 ###  positive multiplicative models
 if(model %in% c("Gamma","Weibull","LogLogistic","LogGaussian"))
 res1=dd/exp(c(mu))
@@ -48,11 +70,27 @@ if(model %in% c("Gaussian","SkewGaussian","Logistic",
                "TwoPieceGaussian","TwoPieceTukeyh","TwoPieceGauss","TwoPieceStudentT","TwoPieceBimodal"))
 {res1=(dd-c(mu))/sqrt(as.numeric(param['sill']))}
 
+if(model=="Gaussian_misp_Binomial")
+{
+    aa=pnorm(c(mu))
+    hh=fit$n*aa
+    res1=(dd-hh)/sqrt(hh*(1-aa))
+}
+if(model=="Gaussian_misp_BinomialNeg")
+{
+    aa=pnorm(c(mu))
+    hh=fit$n*(1-aa)/aa
+    res1=(dd-hh)/sqrt(hh/aa)
+}
+if(model=="Gaussian_misp_Poisson")
+{
+    aa=exp(c(mu))
+    res1=(dd-aa)/sqrt(aa)
+}
+#########
+}
 
 
-#if(binomial or binomialneg or geom or bernoulli)
-#
-#............
 
 fit$X=as.matrix(rep(1,length(dd)))
 
@@ -64,7 +102,17 @@ fit$param=c(nuis_update,paramcorr)
 fit$numbetas=1
 fit$X=as.matrix(rep(1,length(c(fit$data))))
 
-
+if(!is.null(copula)){
+#############################################
+if(copula=="Clayton"||copula=="Gaussian")
+{
+if(model %in% c("Beta2")) {fit$param['shape']=2;fit$param['mean']=0; fit$param['max']=1; fit$param['min']=0}
+if(model %in% c("Kumaraswamy2")) {fit$param['shape']=1;fit$param['mean']=0; fit$param['max']=1; fit$param['min']=0}
+}
+}
+else
+{
+#####################################################
 if(model %in% c("Gaussian","Logistic","Tukeyh","Tukeyh2","Tukeygh","SinhAsinh", "Gaussian_misp_StudentT","Gaussian_misp_Tukeygh",
          "StudentT","TwoPieceGauss","TwoPieceStudentT","TwoPieceGaussian","TwoPieceTukeyh","TwoPieceBimodal"))
 {fit$param['sill']=1;fit$param['mean']=0}
@@ -82,7 +130,8 @@ if(model %in% c("Gaussian_misp_SkewStudentT","SkewStudentT"))
  fit$param['df']= fit$param['df']
  fit$param['sill']=1
 }
-
+##
+}
 
 fit$param=fit$param[nm]
 fit$fixed=fit$fixed[nf]
@@ -167,11 +216,12 @@ GeoFit <- list(bivariate=fit$bivariate,
                          coordy = fit$coordy,
                          coordt = fit$coordt,
                          coordx_dyn=fit$coordx_dyn,
+                         copula=fit$copula,
                          convergence = fit$convergence,
                          corrmodel = fit$corrmodel,
                          data= fit$data,
                          distance = fit$distance,
-                         fixed = fit$fixed,
+                         fixed = as.list(fit$fixed),
                          grid = fit$grid,
                          iterations = fit$counts,
                          likelihood = fit$likelihood,
@@ -183,7 +233,10 @@ GeoFit <- list(bivariate=fit$bivariate,
                          numbetas=fit$numbetas,
                          numcoord=fit$numcoord,
                          numtime=fit$numtime,
-                         param = fit$param,
+                         optimizer=fit$optimizer,
+                         lower=fit$lower,
+                         upper=fit$upper,
+                         param = as.list(fit$param),
                          nozero = fit$setup$nozero,
                          score = fit$score,
                          maxdist =fit$maxdist,

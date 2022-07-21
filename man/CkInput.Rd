@@ -11,7 +11,7 @@ CkInput(coordx, coordy, coordt, coordx_dyn,corrmodel, data, distance,
            fcall, fixed, grid,likelihood, maxdist, maxtime, 
             model, n,  optimizer, param, radius,
            start, taper, tapsep,  type, varest, vartype, 
-           weighted,X)
+           weighted,copula,X)
 }
 \arguments{
    \item{coordx}{A numeric (\eqn{d \times 2}{d x 2})-matrix (where
@@ -76,16 +76,21 @@ CkInput(coordx, coordy, coordt, coordx_dyn,corrmodel, data, distance,
   \item{weighted}{Logical; if \code{TRUE} the likelihood objects are
     weighted. If \code{FALSE} (the
     default) the composite likelihood is not weighted.}
+      \item{copula}{String; the type of copula. It can be "Clayton" or "Gaussian"}
   \item{X}{Numeric; Matrix of space-time covariates in the linear mean specification.}
 }
+
+
+\value{A list with the type of error associated with the input parameters.}
 
 \details{Subroutine called by the fitting procedures.
   The procedure controls the the validity of the input inserted by the users.}
   
 \seealso{\code{\link{GeoFit}}}
 
-\author{Moreno Bevilacqua, \email{moreno.bevilacqua@uv.cl},\url{https://sites.google.com/a/uv.cl/moreno-bevilacqua/home},
-Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/}
+\author{Moreno Bevilacqua, \email{moreno.bevilacqua89@gmail.com},\url{https://sites.google.com/view/moreno-bevilacqua/home},
+Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/},
+Christian", Caamaño-Carrillo, \email{chcaaman@ubiobio.cl},\url{https://www.researchgate.net/profile/Christian-Caamano}
 }
 
 \keyword{Composite}

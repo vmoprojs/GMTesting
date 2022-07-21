@@ -1,14 +1,5 @@
 ####################################################
-### Authors: Moreno Bevilacqua, Víctor Morales Oñate.
-### Email:  moreno.bevilacqua@uv.cl, victor.morales@uv.cl
-### Instituto de Estadistica
-### Universidad de Valparaiso
 ### File name: WeightedLeastSquare.r
-### Description:
-### This file contains a set of procedures in order
-### to estimate the parameters of some covariance
-### function models for a given dataset.
-### Last change: 28/03/2020.
 ####################################################
 
 
@@ -48,7 +39,7 @@ print.GeoWLS <- function(x, digits = max(3, getOption("digits") - 3), ...)
 WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance, fcall, fixed, grid,
                     likelihood, maxdist, neighb,maxtime, model, n, param, parscale,
                     paramrange, radius, start, taper, tapsep, type, varest, vartype,
-                    weighted, winconst,winconst_t, winstp_t, winstp,X,memdist)
+                    weighted, winconst,winconst_t, winstp_t, winstp,copula,X,memdist,nosym)
   {
     # Determines the range of the parameters for a given correlation
     SetRangeParam <- function(namesparam, numparam)
@@ -86,9 +77,7 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
                  namesparam[i]==paste('mean',22,sep="")||
                  namesparam[i]==paste('mean',23,sep="")||
                  namesparam[i]==paste('mean',24,sep="")||
-                 namesparam[i]==paste('mean',25,sep="")
-                 )
-
+                 namesparam[i]==paste('mean',25,sep=""))
               {
                 lower <- c(lower, -big)
                 upper <- c(upper, big)}   
@@ -153,15 +142,15 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
               
         return(list(lower=lower, upper=upper))
     }
-   
+
     ### Initialization parameters:
     initparam <- StartParam(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance, fcall, fixed,
                            grid, likelihood, maxdist,neighb, maxtime, model, n, 
                            param, parscale, paramrange, radius,  start, taper, tapsep,
                            "GeoWLS", type, varest, vartype,
-                           weighted, winconst,winconst_t, winstp_t, winstp, X, memdist)
+                           weighted, winconst,winconst_t, winstp_t, winstp,copula, X, memdist, nosym)
 
-    
+       
   
     if(!is.null(initparam$error))     stop(initparam$error)
     if(length(coordt)>0&&is.list(X)) X=X[[1]]
@@ -173,9 +162,10 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
 
     if( bivariate) {if(is.null(X))  {X=1;num_betas=c(1,1)} 
                     else 
-                   { if(is.list(X)) num_betas=c(ncol(X[[1]]),ncol(X[[2]])) 
-                     else num_betas=c(ncol(X),ncol(X))
-                    } } 
+                       { if(is.list(X)) num_betas=c(ncol(X[[1]]),ncol(X[[2]])) 
+                         else num_betas=c(ncol(X),ncol(X))
+                       } 
+                   } 
 
     
     ### Set the initial type of likelihood objects:
@@ -184,49 +174,58 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
     if(is.null(start)) start <- NA else start <- unlist(start)
     if(is.null(fixed)) fixed <- NA else fixed <- unlist(fixed)
     ### Checks if all the starting values have been passed by the user:
-
-    if(initparam$numstart==initparam$numparam) {
-
-        if((model %in% c('Gaussian','Gauss','Chisq','LogLogistic','Logistic','Gamma','Gamma2','Beta','LogGaussian','LogGauss','Binomial_TwoPieceGaussian','Binomial_TwoPieceGauss',
+ #print(initparam$numstart);print(initparam$numparam)
+if(initparam$numstart==initparam$numparam) {
+   
+        if((model %in% c('Gaussian','Gauss','Chisq','LogLogistic','Logistic','Gamma','Gamma2','Beta','Beta2','LogGaussian','LogGauss','Binomial_TwoPieceGaussian','Binomial_TwoPieceGauss',
           'Tukeygh','Tukeyh','Tukeyh2','Kumaraswamy','Kumaraswamy2','Weibull','SkewGaussian','SkewGauss','SinhAsinh','StudentT','SkewStudentT',
           "Gaussian_misp_StudentT","Gaussian_misp_Poisson","Gaussian_misp_Tukeygh",
-          "Gaussian_misp_SkewStudentT",#"Poisson",
+          "Gaussian_misp_SkewStudentT","PoissonGamma","PoissonWeibull","Gaussian_misp_PoissonGamma",
           "TwoPieceStudentT",'Wrapped',"TwoPieceGaussian","TwoPieceGauss","TwoPieceTukeyh","TwoPieceBimodal")) & 
-          (type %in% c('Standard','Pairwise','Tapering')))
+          (type %in% c('Standard','Pairwise','Tapering','Tapering1','Independence')))
         {
-##########################################################        
-        if(!initparam$bivariate){  ###spatial or temporal univariate case
-          if(is.na(fixed["mean"])){
+
+  ###################################
+  ###################################
+    if(!initparam$bivariate){  ###spatial or temporal univariate case
+       
+          if(is.na(fixed["mean"])&is.na(fixed["mean2"]))
+          {
               if(is.na(start["mean"])) {initparam$param <- c(initparam$fixed["mean"], initparam$param)}
               else {initparam$param <- c(start["mean"], initparam$param)}
-            initparam$namesparam <- sort(names(initparam$param))
-            initparam$param <- initparam$param[initparam$namesparam]
-            initparam$numparam <- initparam$numparam+1
-            initparam$flagnuis['mean'] <- 1
-            initparam$numfixed <- initparam$numfixed-1
-          if(initparam$numfixed > 0) {initparam$fixed <- fixed}
-          else {initparam$fixed <- NULL}
+              initparam$namesparam <- sort(names(initparam$param))
+              initparam$param <- initparam$param[initparam$namesparam]
+              initparam$numparam <- initparam$numparam+1
+              initparam$flagnuis['mean'] <- 1
+              initparam$numfixed <- initparam$numfixed-1
+              if(initparam$numfixed > 0) {initparam$fixed <- fixed}
+              else {initparam$fixed <- NULL}
           }
           else {initparam$fixed['mean'] <- fixed["mean"]} 
-          if(num_betas>1){
-          for(i in 1:(num_betas-1)) {
+         ###################################
+          if(num_betas>1)
+        {
+          for(i in 1:(num_betas-1))
+         {
             if(is.na(fixed[paste("mean",i,sep="")]))
-          {
+                {
               if(is.na(start[paste("mean",i,sep="")])) {initparam$param <- c(initparam$fixed[paste("mean",i,sep="")], initparam$param)}
               else {initparam$param <- c(start[paste("mean",i,sep="")], initparam$param)}
-            initparam$namesparam <- sort(names(initparam$param))
-            initparam$param <- initparam$param[initparam$namesparam]
-            initparam$numparam <- initparam$numparam+1
-            initparam$flagnuis[paste("mean",i,sep="")] <- 1
-            initparam$numfixed <- initparam$numfixed-1}
+              initparam$namesparam <- sort(names(initparam$param))
+              initparam$param <- initparam$param[initparam$namesparam]
+              initparam$numparam <- initparam$numparam+1
+              initparam$flagnuis[paste("mean",i,sep="")] <- 1
+              initparam$numfixed <- initparam$numfixed-1}
             else {initparam$fixed[paste("mean",i,sep="")] <- fixed[paste("mean",i,sep="")]} 
          }
          if(initparam$numfixed > 0) {initparam$fixed <- fixed}
           else {initparam$fixed <- NULL}
-          }}   
-################################################################################################################################################
+        }
+    ###################################
+      }   
+  ###################################
+  ###################################
      if(initparam$bivariate) {           ###bivariate case
-   
               if(is.na(fixed["mean_1"])){
               if(is.na(start["mean_1"])) {initparam$param <- c(initparam$fixed["mean_1"], initparam$param)}
               else {initparam$param <- c(start["mean_1"], initparam$param)}
@@ -276,9 +275,9 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
             initparam$flagnuis[paste("mean_2",i,sep="")] <- 1
             initparam$numfixed <- initparam$numfixed-1}
             else {initparam$fixed[paste("mean_2",i,sep="")] <- fixed[paste("mean_2",i,sep="")]} 
-         }}}
+         }}
+     }
 ###########################
-              
         }
         paramrange=TRUE
         if(paramrange) paramrange <- SetRangeParam(names(initparam$param), length(initparam$param))
@@ -307,7 +306,7 @@ GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, cor
     ### Check the parameters given in input:
     checkinput <- CkInput(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance,"Fitting", fixed, grid, 'None',
                               maxdist, maxtime,  model,NULL,  optimizer, NULL, radius, start, NULL,
-                             NULL, 'GeoWLS', FALSE, 'SubSamp', weighted, NULL)
+                             NULL, 'GeoWLS', FALSE, 'SubSamp', weighted, NULL,NULL)
     
 
     if(!is.null(checkinput$error))
@@ -326,8 +325,14 @@ GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, cor
         param <- c(param, fixed)#set the parameters set:
         paramcorr <- param[namescorr]#set the correlation parameters:
         nuisance <- param[namesnuis]#set the nuisance parameters:
-        #computes the weighted least squares:
-        result <- .C(fun, as.double(bins), as.double(bint), as.integer(corrmodel),
+
+     if(fun=='GeoWLS_G')
+        result <- .C('GeoWLS_G', as.double(bins), as.double(bint), as.integer(corrmodel),
+                     as.double(lenbins), as.double(moments), as.integer(numbins),
+                     as.integer(numbint), as.double(nuisance), as.double(paramcorr),
+                     res=double(1), PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE)$res
+     if(fun=='LeastSquare_G')
+        result <- .C('LeastSquare_G', as.double(bins), as.double(bint), as.integer(corrmodel),
                      as.double(lenbins), as.double(moments), as.integer(numbins),
                      as.integer(numbint), as.double(nuisance), as.double(paramcorr),
                      res=double(1), PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE)$res
@@ -343,7 +348,7 @@ GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, cor
     initparam <- StartParam(coordx, coordy, coordt, coordx_dyn,corrmodel, data, distance, "Fitting", fixed, grid,
     'None', maxdist, neighb,maxtime,  model, NULL,  NULL,
                            parscale, optimizer=='L-BFGS-B', radius, start,NULL,  NULL,
-                           'GeoWLS', 'GeoWLS', FALSE, 'SubSamp', FALSE, 1, 1,1,1, NULL,0)
+                           'GeoWLS', 'GeoWLS', FALSE, 'SubSamp', FALSE, 1, 1,1,1,NULL, NULL,0)
     if(!is.null(initparam$error))
       stop(initparam$error)
      coordx=initparam$coordx
@@ -379,7 +384,7 @@ GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, cor
          NS=c(0,NS)[-(length(ns)+1)]
       fname <- 'Binned_Variogram_st';fname <- paste(fname,"2",sep="") 
       # Compute the spatial-temporal moments:
-      EV=.C(fname, bins=bins, bint=bint, as.double(coordx),as.double(coordy),as.double(coordt),as.double(initparam$data),
+      EV=.C("Binned_Variogram_st2", bins=bins, bint=bint, as.double(coordx),as.double(coordy),as.double(coordt),as.double(initparam$data),
            lenbins=lenbins,lenbinst=lenbinst,lenbint=lenbint,moments= moments, momentst=momentst, momentt=momentt, as.integer(numbins), as.integer(numbint),
            as.integer(ns),as.integer(NS), PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE)
       bins=EV$bins
@@ -436,7 +441,7 @@ GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, cor
       lenbint <- integer(1) # vector of temporal bin sizes
       lenbinst <- integer(1)  # vector of spatial-temporal bin sizes
       fname <- paste(fname,"2",sep="")
-      EV=.C(fname, bins=bins, as.double(coordx),as.double(coordy),as.double(coordt),as.double(initparam$data), lenbins=lenbins,
+      EV=.C("Binned_Variogram2", bins=bins, as.double(coordx),as.double(coordy),as.double(coordt),as.double(initparam$data), lenbins=lenbins,
          moments=moments, as.integer(numbins),PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE)
       bins=EV$bins
       lenbins=EV$lenbins
@@ -457,8 +462,10 @@ GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, cor
         initparam$param['scale'] <- bins[max(variograms)==variograms]}
     ###### ----------- END Estimation of the empirical variogram ---------- #####
 
+
+
     ###### ---------- START model fitting by weighted least squares method ----------######
-    if(model=='Gaussian'||model=='Gauss') # Gaussian random field:
+    #if(model=='Gaussian'||model=='Gauss') # Gaussian random field:
       if(weighted) fname <- 'GeoWLS_G'
       else fname <- 'LeastSquare_G'
 
@@ -475,6 +482,9 @@ GeoWLS <- function(data, coordx, coordy=NULL, coordt=NULL,  coordx_dyn=NULL, cor
                       moments=moments, namescorr=initparam$namescorr, namesnuis=initparam$namesnuis,
                       numbins=numbins, numbint=numbint, control=list(fnscale=-1, reltol=1e-14, maxit=1e8),
                       hessian=FALSE)
+
+
+
     ###### ---------- END model fitting by weighted least squares method ----------######
     ### Removes the global variobales:
      .C('DeleteGlobalVar', PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE)  

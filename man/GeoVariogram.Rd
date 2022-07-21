@@ -1,16 +1,17 @@
 \name{GeoVariogram}
 \alias{GeoVariogram}
 \encoding{UTF-8}
-\title{Empirical Variogram estimation}
+\title{Empirical semi-variogram estimation}
 \description{
-  The function returns an empirical estimate of the  variogram  for spatio (temporal)  and bivariate 
+  The function returns an empirical estimate of the  semi-variogram  for spatio (temporal)  and bivariate 
   random fields. 
 }
 \usage{
-GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, cloud=FALSE,
-           distance='Eucl', grid=FALSE, maxdist=NULL,neighb=NULL,
-           maxtime=NULL, numbins=NULL, radius=6371,  
-           type='variogram',bivariate=FALSE)
+GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, 
+coordx_dyn=NULL,cloud=FALSE, distance="Eucl",
+              grid=FALSE, maxdist=NULL,neighb=NULL,
+              maxtime=NULL, memdist=FALSE,numbins=NULL, 
+              radius=6371, type='variogram',bivariate=FALSE)
 }
 \arguments{
   \item{data}{A \eqn{d}{d}-dimensional vector (a single spatial realisation) or a (\eqn{n \times d}{n x d})-matrix
@@ -33,9 +34,9 @@ GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, cloud=FALS
    \item{coordx_dyn}{A list of \eqn{m} numeric (\eqn{d_t \times 2}{d x 2})-matrices
        containing dynamical (in time) spatial coordinates. Optional argument, the default is \code{NULL}
     }   
-  \item{cloud}{Logical; if \code{TRUE} the variogram cloud is computed,
+  \item{cloud}{Logical; if \code{TRUE} the semivariogram cloud is computed,
   otherwise if \code{FALSE} (the default) the empirical (binned)
-  variogram is returned.}
+  semivariogram is returned.}
   \item{distance}{String; the name of the spatial distance. The default
     is \code{Eucl}, the euclidean distance. See the Section
     \bold{Details} of \code{\link{GeoFit}}.}
@@ -44,16 +45,16 @@ GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, cloud=FALS
     non-equispaced spatial sites.}
   \item{maxdist}{A numeric value denoting the spatial maximum distance,
    see the Section \bold{Details}.}
+       \item{memdist}{ Logical; if \code{FALSE} then  all  the distances are computed during the semivariogram computation. If \code{TRUE} then the nabor package is used to find the distances specificing a \code{maxdist} and a \code{neighb}. The second option can be useful for large datasets}
    \item{neighb}{Numeric; an optional positive integer indicating the 
-    order of neighborhood  in the composite likelihood
-    computation. See the Section \bold{Details} for more information.}
+    order of neighborhood. See the Section \bold{Details} for more information.}
    \item{maxtime}{A numeric value denoting the temporal maximum distance,
    see the Section \bold{Details}.}
   \item{numbins}{A numeric value denoting the numbers of bins, see the
     Section \bold{Details}.}
   \item{radius}{Numeric; a value indicating  the radius of the sphere when 
   using the great circle distance. Default value is the radius of the earth in Km (i.e. 6371)} 
-  \item{type}{A String denoting the type of variogram. The option
+  \item{type}{A String denoting the type of semivariogram. The option
      available is : \code{variogram}.}
     \item{bivariate}{Logical; if \code{FALSE} (the default) the data
     are interpreted as univariate spatial or spatial-temporal realisations. 
@@ -62,21 +63,13 @@ GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, cloud=FALS
 
 \details{
 
-  We briefly report the definitions of semi-variogram used in this function.
+  We briefly report the definitions of semi-variogram used for the spatial case. It can be easily extended 
+  to the space-time or spatial bivariate case.
   In the case of a spatial Gaussian random field
-  the sample \code{variogram} estimator is defined by
+  the sample semivariogram estimator is defined by
   \deqn{\hat{\gamma}(h) = 0.5 \sum_{x_i, x_j \in N(h)} (Z(x_i) - Z(x_j))^2 / |N(h)|}
   where \eqn{N(h)} is the set of all the sample pairs whose distances fall into a tolerance region with size \eqn{h}
   (equispaced intervalls are considered).
-  
-  In the case of a spatio-temporal Gaussian random field the sample
-  \code{variogram} estimator is defined by
-  \deqn{\hat{\gamma}(h, u) = 0.5 \sum_{(x_i, l), (x_j, k) \in N(h, u)} (Z(x_i, l) - Z(x_j, k))^2 / |N(h, u)|}
-  where \eqn{N(h, u)}{N(h, u)} is the set of all the sample pairs whose
-  spatial distances fall into a tolerance region with size \eqn{h}{h}
-  and \eqn{|k - l| = u}{\|k-l\|=u}. Note, that \eqn{Z(x_i, l)}{Z(x_i,l)}
-  is the observation at site \eqn{x_i}{x_i} and time
-  \eqn{l}{l}. 
 
   The  \code{numbins} parameter indicates the number of adjacent
   intervals to consider in order to grouped distances with which to
@@ -84,11 +77,13 @@ GeoVariogram(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, cloud=FALS
 
   The \code{maxdist} parameter indicates the maximum spatial distance below which
   the shorter distances will be considered in the calculation of
-  the (weigthed) least squares.
+  the semivariogram.
+
+   The \code{maxdist} parameter can be coupled with the \code{neighb} parameter (setting \code{memdist=T}). This is useful when handling large dataset.
 
   The \code{maxtime} parameter indicates the maximum temporal distance below which
   the shorter distances will be considered in the calculation of
-  the (weigthed) least squares.
+  the spatio-temoral semivariogram.
 }
 
 \value{
@@ -131,8 +126,9 @@ Cressie, N. A. C. (1993) \emph{Statistics for Spatial Data}. New York: Wiley.
 \seealso{\code{\link{GeoFit}}}
 
 
-\author{Moreno Bevilacqua, \email{moreno.bevilacqua@uv.cl},\url{https://sites.google.com/a/uv.cl/moreno-bevilacqua/home},
-Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/}
+\author{Moreno Bevilacqua, \email{moreno.bevilacqua89@gmail.com},\url{https://sites.google.com/view/moreno-bevilacqua/home},
+Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/},
+Christian", Caamaño-Carrillo, \email{chcaaman@ubiobio.cl},\url{https://www.researchgate.net/profile/Christian-Caamano}
 }
 
  \examples{
@@ -150,7 +146,7 @@ x = runif(200, 0, 1)
 y = runif(200, 0, 1)
 coords = cbind(x,y)
 # Set the model's parameters:
-corrmodel = "exponential"
+corrmodel = "Exponential"
 mean = 0
 sill = 1
 nugget = 0
@@ -161,12 +157,9 @@ data = GeoSim(coordx=coords, corrmodel=corrmodel, param=list(mean=mean,
               sill=sill, nugget=nugget, scale=scale))$data
 
 # Empirical spatial semi-variogram estimation:
-fit = GeoVariogram(coordx=coords,data=data,maxdist=0.6)
+vario = GeoVariogram(coordx=coords,data=data,maxdist=0.6)
 
-# Results:
-plot(fit$centers, fit$variograms, xlab='h', ylab=expression(gamma(h)),
-     ylim=c(0, max(fit$variograms)), pch=20,
-     main="Semi-variogram")
+plot(vario,pch=20,ylim=c(0,1),ylab="Semivariogram",xlab="Distance")
 
 
 ################################################################
@@ -191,40 +184,9 @@ data = GeoSim(coordx=coords, coordt=times, corrmodel="gneiting",
               nugget=0,power_s=1,power_t=1,sep=0.5))$data
 
 # Empirical spatio-temporal semi-variogram estimation:
-fit = GeoVariogram(data=data, coordx=coords, coordt=times, maxtime=7,maxdist=0.5)
+vario_st = GeoVariogram(data=data, coordx=coords, coordt=times, maxtime=7,maxdist=0.5)
 
-# Results: Marginal spatial empirical  semi-variogram
-par(mfrow=c(2,2), mai=c(.5,.5,.3,.3), mgp=c(1.4,.5, 0))
-plot(fit$centers, fit$variograms, xlab='h', ylab=expression(gamma(h)),
-     ylim=c(0, max(fit$variograms)), xlim=c(0, max(fit$centers)),
-     pch=20,main="Marginal spatial semi-variogram",cex.axis=.8)
-
-# Results: Marginal temporal empirical  semi-variogram
-plot(fit$bint, fit$variogramt, xlab='t', ylab=expression(gamma(t)),
-     ylim=c(0, max(fit$variogramt)),xlim=c(0,max(fit$bint)),
-     pch=20,main="Marginal temporal semi-variogram",cex.axis=.8)
-
-# Building space-time semi-variogram
-st.vario = matrix(fit$variogramst,length(fit$centers),length(fit$bint))
-st.vario = cbind(c(0,fit$variograms), rbind(fit$variogramt,st.vario))
-
-# Results: 3d Spatio-temporal semi-variogram
-require(scatterplot3d)
-st.grid = expand.grid(c(0,fit$centers),c(0,fit$bint))
-scatterplot3d(st.grid[,1], st.grid[,2], c(st.vario),
-              highlight.3d=TRUE, xlab="h",ylab="t",
-              zlab=expression(gamma(h,t)), pch=20,
-              main="Space-time semi-variogram",cex.axis=.7,
-              mar=c(2,2,2,2), mgp=c(0,0,0),
-              cex.lab=.7)
-
-# A smoothed version
-par(mai=c(.2,.2,.2,.2),mgp=c(1,.3, 0))
-persp(c(0,fit$centers), c(0,fit$bint), st.vario,
-      xlab="h", ylab="u", zlab=expression(gamma(h,u)),
-      ltheta=90, shade=0.75, ticktype="detailed", phi=30,
-      theta=30,main="Space-time semi-variogram",cex.axis=.8,
-      cex.lab=.8)
+plot(vario_st)
       
 ################################################################
 ###
@@ -250,16 +212,7 @@ data = GeoSim(coordx=coords, corrmodel="Bi_matern", param=param)$data
 # Empirical  semi-(cross)variogram estimation:
 biv_vario=GeoVariogram(data,coordx=coords, bivariate=TRUE,maxdist=c(0.5,0.5,0.5))  
 
-# Variograms plots
-par(mfrow=c(2,2))
-plot(biv_vario$centers,biv_vario$variograms[1,],pch=20,xlab="h",ylim=c(0,1.2),
-                                      ylab="",main=expression(gamma[11](h)))
-plot(biv_vario$centers,biv_vario$variogramst,pch=20,xlab="h",
-                                      ylab="",main=expression(gamma[12](h)))
-plot(biv_vario$centers,biv_vario$variogramst,pch=20,xlab="h",ylab="",
-                                      main=expression(gamma[21](h)))
-plot(biv_vario$centers,biv_vario$variograms[2,],pch=20,xlab="h",,ylim=c(0,1.2),
-                                      ylab="",main=expression(gamma[22](h)))
+plot(biv_vario,pch=20)
       
 }
 

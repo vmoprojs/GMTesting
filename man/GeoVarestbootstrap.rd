@@ -4,8 +4,10 @@
 \title{Update a \code{GeoFit} object   using parametric bootstrap for std error estimation}
 \description{
   The procedure update a \code{GeoFit} object  estimating stderr estimation using parametric bootstrap.}
-\usage{GeoVarestbootstrap(fit,K=100,sparse=FALSE,GPU=NULL,local=c(1,1),optimizer="Nelder-Mead",
-                     lower=NULL, upper=NULL, memdist=TRUE,seed=1)}
+\usage{GeoVarestbootstrap(fit,K=100,sparse=FALSE,
+GPU=NULL,local=c(1,1),optimizer="Nelder-Mead",
+                     lower=NULL, upper=NULL, 
+                     method="cholesky",memdist=TRUE, M=30,L=500,seed=1)}
 \arguments{
   \item{fit}{A fitted object obtained from the
     \code{\link{GeoFit}}.}
@@ -20,20 +22,25 @@
     when the optimizer is  \code{L-BFGS-B} or \code{nlminb}  or \code{optimize}.}
        \item{upper}{An optional named list giving the values  for the upper bound of the space parameter
     when the optimizer is  \code{L-BFGS-B} or \code{nlminb}  or \code{optimize}.}
-            \item{memdist}{ Logical; if \code{TRUE} then  the distances in the  composite likelihood 
+       \item{method}{String; The method of simulation. Default is \code{cholesky}.
+           For large data set two options are \code{Vecchia} or {TB}}
+        \item{memdist}{ Logical; if \code{TRUE} then  the distances in the  composite likelihood 
       are computed before  the optimization. }
+         \item{M}{Numeric; the number of neighboords in the Vecchia method.} 
+      \item{L}{Numeric; the number of lines in the  turning band method.} 
         \item{seed}{Numeric; The seed used in the  n-fold  kriging cross-validation. Default is 1.}
      }
 \details{ The function update a \code{GeoFit} object  estimating stderr estimation using parametric bootstrap.}
 \value{  
-  Returns an object of class \code{GeoFit}.
+  Returns an (updated) object of class \code{GeoFit}.
 }
 
 
 \seealso{\code{\link{GeoFit}}.}
 
-\author{Moreno Bevilacqua, \email{moreno.bevilacqua@uv.cl},\url{https://sites.google.com/a/uv.cl/moreno-bevilacqua/home},
-Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/}
+\author{Moreno Bevilacqua, \email{moreno.bevilacqua89@gmail.com},\url{https://sites.google.com/view/moreno-bevilacqua/home},
+Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/},
+Christian", Caamaño-Carrillo, \email{chcaaman@ubiobio.cl},\url{https://www.researchgate.net/profile/Christian-Caamano}
 }
 
 

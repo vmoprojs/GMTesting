@@ -8,14 +8,19 @@
   composite log-likelihood.
 }
 \usage{
-CompLik(bivariate, coordx, coordy ,coordt, coordx_dyn, corrmodel, data, distance,  
-               flagcorr, flagnuis, fixed, GPU, grid,likelihood,local,lower, 
-                 model, n, namescorr, namesnuis, namesparam,
-               numparam, numparamcorr, optimizer, onlyvar, parallel, param,
+CompLik(copula,bivariate, coordx, coordy ,coordt, 
+coordx_dyn, corrmodel, data,distance,  flagcorr, 
+flagnuis, fixed, GPU, grid,likelihood,local,lower, 
+                 model, n, namescorr, namesnuis, 
+                 namesparam,
+               numparam, numparamcorr, optimizer, 
+               onlyvar, parallel, param,
                spacetime, type,upper, varest, vartype,
-               weigthed, winconst, winstp,winconst_t, winstp_t, ns, X,sensitivity)
+               weigthed, winconst, winstp,winconst_t, 
+               winstp_t, ns, X,sensitivity,MM,aniso)
 }
 \arguments{
+  \item{copula}{String; the type of copula. It can be "Clayton" or "Gaussian"}
  \item{bivariate}{Logical; if \code{TRUE} then the data come froma a bivariate random field. 
                 Otherwise from a univariate random field.}
   \item{coordx}{A numeric (\eqn{d \times 2}{d x 2})-matrix (where
@@ -104,7 +109,12 @@ CompLik(bivariate, coordx, coordy ,coordt, coordx_dyn, corrmodel, data, distance
    \item{ns}{Numeric; Number of (dynamical) temporal instants. }   
       \item{X}{Numeric; Matrix of space-time covariates in the linear mean specification.}
          \item{sensitivity}{Logical; if \code{TRUE} then  the sensitivy  matrix is computed}
+            \item{MM}{Numeric;a non constant fixed mean }
+          \item{aniso}{Logical; should anisotropy be considered?}
 }
+
+\value{Return a list from an \code{optim} call.}
+
 \details{ Subroutine called by GeoFit.
   The procedure estimates the model parameters by maximisation of the
   composite log-likelihood}
@@ -112,8 +122,9 @@ CompLik(bivariate, coordx, coordy ,coordt, coordx_dyn, corrmodel, data, distance
 \seealso{\code{\link{GeoFit}}}
 
 
-\author{Moreno Bevilacqua, \email{moreno.bevilacqua@uv.cl},\url{https://sites.google.com/a/uv.cl/moreno-bevilacqua/home},
-Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/}
+\author{Moreno Bevilacqua, \email{moreno.bevilacqua89@gmail.com},\url{https://sites.google.com/view/moreno-bevilacqua/home},
+Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/},
+Christian", Caamaño-Carrillo, \email{chcaaman@ubiobio.cl},\url{https://www.researchgate.net/profile/Christian-Caamano}
 }
 
 \keyword{Composite}

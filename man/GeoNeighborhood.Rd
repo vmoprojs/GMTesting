@@ -3,14 +3,17 @@
 \encoding{UTF-8}
 \title{Spatio (temporal) neighborhood selection for local kriging.}
 \description{
-Given a set of spatio (temporal) locations and data, the procedure select a spatio (temporal) neighborhood associated to some  given spatio (temporal) locations.
+Given a set of spatio (temporal) locations and data, the procedure selects a spatio (temporal) neighborhood associated to some  given spatio (temporal) locations.
 The neighborhood is computed  using a fixed  spatio (temporal) threshold
-or including  a fixed number of spatio (temporal) neighbors.
+or considering a fixed number of spatio (temporal) neighbors.
 }
 
 \usage{
-GeoNeighborhood(data=NULL, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, bivariate=FALSE,
-               distance="Eucl", grid=FALSE, loc, neighb=NULL,maxdist=NULL,maxtime=NULL, radius=6371, time=NULL, X=NULL)
+GeoNeighborhood(data=NULL, coordx, coordy=NULL,
+coordt=NULL, coordx_dyn=NULL, bivariate=FALSE,
+               distance="Eucl", grid=FALSE, 
+               loc, neighb=NULL,maxdist=NULL,
+               maxtime=NULL, radius=6371, time=NULL, X=NULL)
 }
 \arguments{
   \item{data}{An optional \eqn{d}{d}-dimensional vector (a single spatial realisation)  or a (\eqn{d \times d}{d x d})-matrix (a single spatial realisation on regular grid)
@@ -42,13 +45,12 @@ GeoNeighborhood(data=NULL, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, bi
   \item{loc}{A (\eqn{1 \times 2}{1 x 2})-matrix  giving the spatial coordinate
      of the location for which a neighborhood is computed .}
  \item{neighb}{Numeric; an optional positive integer indicating the 
-    order of neighborhood.}
+    order of spatial neighborhood.}
  \item{maxdist}{Numeric; a positive value indicating the maximum
     spatial distance considered in the spatial neighborhood
     selection.}
-  \item{maxtime}{Numeric; a positive value indicating the maximum
-    temporal distance considered in the temporal neighborhood
-    selection.}
+  \item{maxtime}{Numeric; an optional positive integer indicating the 
+    order of temporal  neighborhood.}
     \item{radius}{Numeric; a value indicating  the radius of the sphere when using the great 
     circle distance. Default value is the radius of the earth in Km (i.e. 6371)}  
    \item{time}{Numeric; a value  giving the temporal instant for which a neighborhood is computed.}
@@ -71,8 +73,9 @@ GeoNeighborhood(data=NULL, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL, bi
 
 
 
-\author{Moreno Bevilacqua, \email{moreno.bevilacqua@uv.cl},\url{https://sites.google.com/a/uv.cl/moreno-bevilacqua/home},
-Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/}
+\author{Moreno Bevilacqua, \email{moreno.bevilacqua89@gmail.com},\url{https://sites.google.com/view/moreno-bevilacqua/home},
+Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/},
+Christian", Caamaño-Carrillo, \email{chcaaman@ubiobio.cl},\url{https://www.researchgate.net/profile/Christian-Caamano}
 }
 
 
@@ -127,7 +130,7 @@ plot(coords,xlim=c(0,1),ylim=c(0,1))
 points(loc_to_pred,pch=20)
 
 neigh=GeoNeighborhood(data_all, coordx=coords,  coordt=coordt,
-                  loc=loc_to_pred,time=time,maxdist=0.4,maxtime=0.25)
+                  loc=loc_to_pred,time=time,maxdist=0.4,maxtime=1)
 
 # first spatio-temporal neighborhoods 
 # with  associated data

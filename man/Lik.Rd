@@ -8,12 +8,17 @@
   log-likelihood.
 }
 \usage{
-Lik(bivariate,coordx,coordy,coordt,coordx_dyn,corrmodel,data,fixed,flagcor,flagnuis,
-           grid,lower,mdecomp,model,namescorr,namesnuis,namesparam,numcoord,
-           numpairs,numparamcor,numtime,optimizer,onlyvar,parallel,param,radius,setup,
-           spacetime,sparse,varest,taper,type,upper,ns,X)
+Lik(copula,bivariate,coordx,coordy,coordt,
+coordx_dyn,corrmodel,data,fixed,flagcor,flagnuis,
+           grid,lower,mdecomp,model,namescorr,
+           namesnuis,namesparam,numcoord,
+           numpairs,numparamcor,numtime,optimizer,
+           onlyvar,parallel,param,radius,setup,
+           spacetime,sparse,varest,taper,type,
+           upper,ns,X,neighb,MM,aniso)
 }
 \arguments{
+  \item{copula}{String; the type of copula. It can be "Beta" or "Gaussian"}
   \item{bivariate}{Logical; if \code{TRUE} then the data come froma a bivariate random field.
         Otherwise from a univariate random field.}
     \item{coordx}{A numeric (\eqn{d \times 2}{d x 2})-matrix (where
@@ -87,14 +92,20 @@ Lik(bivariate,coordx,coordy,coordt,coordx_dyn,corrmodel,data,fixed,flagcor,flagn
       of the space parameter when the optimizer is or \code{L-BFGS-B} or  \code{nlminb} or \code{optimize}. 
        The names of the list must be the same of the names in the   \code{start} list.}
     \item{X}{Numeric; Matrix of spatio(temporal)covariates in the linear mean specification.}
+  \item{neighb}{Numeric;parameter for vecchia approximation using GPvecchia package}
+    \item{MM}{Numeric;a non constant fixed mean }
+           \item{aniso}{Logical; should anisotropy be considered?}
 }
+
+\value{Return a list from an \code{optim} call.}
 
 \seealso{\code{\link{GeoFit}}}
 
 
 
-\author{Moreno Bevilacqua, \email{moreno.bevilacqua@uv.cl},\url{https://sites.google.com/a/uv.cl/moreno-bevilacqua/home},
-Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/}
+\author{Moreno Bevilacqua, \email{moreno.bevilacqua89@gmail.com},\url{https://sites.google.com/view/moreno-bevilacqua/home},
+Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/},
+Christian", Caamaño-Carrillo, \email{chcaaman@ubiobio.cl},\url{https://www.researchgate.net/profile/Christian-Caamano}
 }
 
 \keyword{Composite}

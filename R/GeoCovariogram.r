@@ -1,17 +1,7 @@
 ####################################################
-### Authors:  Moreno Bevilacqua, Víctor Morales Oñate.
-### Email:  moreno.bevilacqua@uv.cl, victor.morales@uv.cl
-### Institutions: 
-### Instituto de Estadistica
-### Universidad de Valparaiso
-### File name: GeoCovariogram.r
-### Description:
-### This file contains a set of procedures
-### to compute and plot the estimated covariance
-### function and the variogram after fitting a
-### random field by composite-likelihood.
-### Last change: 1/12/2020.
+### File name: GeoCovVariogram.r
 ####################################################
+
    
 ### Procedures are in alphabetical order.
 
@@ -24,6 +14,7 @@ GeoCovariogram <- function(fitted, distance="Eucl", answer.cov=FALSE, answer.var
                         vario=NULL, ...)
   {
     result <- NULL
+
     CheckDistance<- function(distance)
     {
         CheckDistance <- NULL
@@ -78,6 +69,7 @@ GeoCovariogram <- function(fitted, distance="Eucl", answer.cov=FALSE, answer.var
 ################    
 ### starting ###
 ################
+
     dyn=FALSE
     isvario <- !is.null(vario) # is empirical variogram is passed?
     bivariate <- fitted$bivariate
@@ -85,7 +77,10 @@ GeoCovariogram <- function(fitted, distance="Eucl", answer.cov=FALSE, answer.var
     ispatim <- fitted$spacetime
     dyn<- is.list(fitted$coordx_dyn)
     
-par(mfrow=c(1,1))
+
+opar=par(no.readonly = TRUE)
+on.exit(par(opar))
+
 if(!ispatim && !bivariate){ if( (show.cov && show.vario) || (show.cov)) par(mfrow=c(1,2))}
 if(show.vario && ispatim) par(mfrow=c(1,2))
 if(show.vario && ispatim && !is.null(fix.lags) && !is.null(fix.lagt)) par(mfrow=c(2,2))
@@ -94,13 +89,15 @@ if(show.cov && ispatim && is.null(fix.lags) && is.null(fix.lagt)) par(mfrow=c(1,
 if(show.vario && bivariate) {par(mfrow=c(2,2))}
 if(bivariate&&dyn) par(mfrow=c(1,2))
 
-
+fitted$param=unlist(fitted$param)
+fitted$fixed=unlist(fitted$fixed)
     
     # START ---- check input --- #
-    if(!class(fitted)=='GeoFit' & !class(fitted)=='GeoWLS')
-        stop("Enter an object obtained GeoFit or WLeastSquare")
 
-    if(isvario & !class(vario)=='GeoVariogram')
+    if( !inherits(fitted,"GeoFit")  & !inherits(fitted,"GeoWLS") )
+        stop("Enter an object obtained GeoFit or WLeastSquare")
+  
+    if(isvario & !inherits(vario,"GeoVariogram") )
         stop("Enter an object obtained from the function GeoVariogram")
 
     if(!is.numeric(pract.range) & answer.range)
@@ -132,14 +129,18 @@ if(bivariate&&dyn) par(mfrow=c(1,2))
     tukeyh<- model ==34
     tukeyh2<- model ==40
     sas<- model ==20
-    poisson<- model==30||model==36
+    poisson<- model==30
+    poissongamma<- model==46||model==47
     poissonZIP<- model==43||model==44
     loglogistic <- model==24
     tukeygh<- model==9||model==41
+    Gaussian_misp_Binomial<-model==51
+    Gaussian_misp_Poisson<-model==36
+    Gaussian_misp_BinomialNeg<-model==52
     zero <- 0;slow=1e-3;
-    if(gaussian||skewgausssian||gamma||loggauss||binomial||binomialneg||binomialnegZINB||geom||tukeyh||tukeyh2||sas||twopiecebimodal||skewstudentT
-            ||twopieceGauss||twopieceTukeyh||twopieceT) slow=1e-9
-    else slow=1e-3
+    if(gaussian||skewgausssian||gamma||loggauss||binomial||Gaussian_misp_Binomial||Gaussian_misp_BinomialNeg||Gaussian_misp_Poisson||binomialneg||binomialnegZINB||geom||tukeyh||tukeyh2||sas||twopiecebimodal||skewstudentT
+            ||twopieceGauss||twopieceTukeyh||twopieceT) slow=1e-6
+    else slow=1e-5 
     # lags associated to empirical variogram estimation
     if(isvario){
     lags <- c(0,vario$centers);numlags <- length(lags)
@@ -195,11 +196,9 @@ if(bivariate&&dyn) par(mfrow=c(1,2))
         type_dist <- CheckDistance(distance)
         p=.C("Maxima_Minima_dist",mmm=as.double(mmm),as.double(fitted$coordx),as.double(fitted$coordy)
         ,as.integer(fitted$numcoord),as.integer(type_dist),as.double(fitted$radius),PACKAGE='GeoModels', DUP=TRUE, NAOK=TRUE)
-       # if(type_dist==0) mmx=max(c(dist(cbind(fitted$coordx,fitted$coordy))))
         lags_m <- seq(slow,p$mmm[2],length=150)
         if (ispatim) {
             tt <- double(2)
-            #p=.C("Maxima_Minima_time",tt=as.double(tt),as.double(fitted$coordt),as.integer(fitted$numtime),PACKAGE='GeoModels', DUP=TRUE, NAOK=TRUE)
             lagt_m <- seq(slow,max(c(dist(fitted$coordt))) ,length=150)
         }
         else lagt_m<-0
@@ -215,13 +214,16 @@ if(!bivariate) {
 
      nui=nuisance
      nui['sill']=1;
-if(!(binomial||geom||binomialneg||binomialnegZINB)) nui['nugget']=0
-else                                        nui['nugget']=nuisance['nugget']
+if(!(binomial||geom||binomialneg||binomialnegZINB||Gaussian_misp_Binomial||
+       Gaussian_misp_BinomialNeg||Gaussian_misp_Poisson)) nui['nugget']=0
+else                                     nui['nugget']=nuisance['nugget']
     #nui['nugget']=1-nui['sill']
   #   nui=nuisance
   #  if(gamma||weibull||studentT||loglogistic) {nui['sill']=1;nui['nugget']=1-nui['sill']}
    #print(nui)
-
+    if(fitted$model=="Gaussian_misp_Binomial") fitted$model="Binomial"
+    if(fitted$model=="Gaussian_misp_BinomialNeg") fitted$model="BinomialNeg"
+    if(fitted$model=="Gaussian_misp_Poisson") fitted$model="Poisson"
     correlation <- CorrelationFct(bivariate,corrmodel, lags_m, lagt_m, numlags_m, numlagt_m,mu,
                                      CkModel(fitted$model), nui,param,fitted$n)
 
@@ -236,10 +238,12 @@ else                                        nui['nugget']=nuisance['nugget']
                         variogram22  <- correlation[(7*length(lags_m)+1):(8*length(lags_m))]
                            }
         else { 
-        covariance <- nuisance["nugget"]+nuisance["sill"]*correlation
-        #covariance <- as.numeric(nuisance["sill"])*correlation*(1-as.numeric(nuisance["nugget"]))
-        variogram <- nuisance["nugget"]+nuisance["sill"]*(1-correlation)
-        #variogram <-as.numeric(nuisance["sill"])*(1-correlation*(1-as.numeric(nuisance["nugget"])))
+
+
+        #covariance <- nuisance["nugget"]+nuisance["sill"]*correlation
+        covariance <- as.numeric(nuisance["sill"])*correlation*(1-as.numeric(nuisance["nugget"]))
+        #variogram <- nuisance["nugget"]+nuisance["sill"]*(1-correlation)
+        variogram <-as.numeric(nuisance["sill"])*(1-correlation*(1-as.numeric(nuisance["nugget"])))
         
         }
     }
@@ -367,9 +371,9 @@ else                                        nui['nugget']=nuisance['nugget']
                               correlation=correlation*(1-nuisance['nugget'] )
                               h=as.numeric(nuisance['tail'])
                               sill=as.numeric(nuisance['sill'])
-                              vs=  (1-2*h)^(-1.5)     ## variance
-                              cc=(-correlation/((1+h*(correlation-1))*(-1+h+h*correlation)*(1+h*(-2+h-h*correlation^2))^0.5))/vs
-                              
+                              vs=  (1-2*h)^(-1.5)     
+                              cc=correlation*(1-2*h)^(1.5)/ ((1-h)^2-(h*correlation)^2)^(1.5)
+                              #print(vs);print(sill); print(cc)
                               covariance=sill*vs*cc;variogram=sill*vs*(1-cc)  
                              } 
                   } 
@@ -379,6 +383,7 @@ else                                        nui['nugget']=nuisance['nugget']
                               hr=as.numeric(nuisance['tail1']); hl=as.numeric(nuisance['tail2'])
                               sill=as.numeric(nuisance['sill'])
                               corr=correlation
+                              corr[corr>=0.99999999]=0.99999999
                               x1=1-(1-corr^2)*hr; x2=(1-hr)^2-(corr*hr)^2
                               y1=1-(1-corr^2)*hl; y2=(1-hl)^2-(corr*hl)^2
                               g=1-hl-hr+(1-corr^2)*hl*hr
@@ -387,9 +392,9 @@ else                                        nui['nugget']=nuisance['nugget']
                               p1=x1*h1/(2*pi*(x2)^(3/2))+corr/(4*(x2)^(3/2)); p2=y1*h2/(2*pi*(y2)^(3/2))+corr/(4*(y2)^(3/2))
                               p3=-(x1*y1)^(1/2)*h3/(2*pi*(g)^(3/2))+corr/(4*(g)^(3/2))
                               mm=(hr-hl)/(sqrt(2*pi)*(1-hl)*(1-hr))
-                              vs=0.5*(1-2*hl)^(-3/2)+0.5*(1-2*hr)^(-3/2)-(mm)^2
+                              vs=0.5*((1-2*hl)^(-3/2)+(1-2*hr)^(-3/2)) -(mm)^2
+
                               cc=(p1+p2+2*p3-mm^2)/vs
-                         
                           covariance=sill*vs*cc;variogram=sill*vs*(1-cc)  
                              } 
                   }   
@@ -402,15 +407,33 @@ else                                        nui['nugget']=nuisance['nugget']
                               sill=as.numeric(nuisance['sill'])
                               eta=as.numeric(nuisance['skew'])
                               rho2=rho*rho; eta2=eta*eta; tail2=tail*tail;
-                              u=1-tail; a=1+rho;
-                              mu=(exp(eta2/(2*u))-1)/(eta*sqrt(u));
-                              vs=(exp(2*eta2/(1-2*tail))-2*exp(eta2/(2*(1-2*tail)))+1)/(eta2*sqrt(1-2*tail))-mu*mu;
-                              A1=exp(a*eta2/(1-tail*a));
-                              A2=2*exp(0.5*eta2*  (1-tail*(1-rho2))  / (u*u- tail2*rho2)  );
-                              A3=eta2*sqrt(u*u- rho2*tail*tail);
-                              cc=((A1-A2+1)/A3-mu*mu)/vs;
-                              covariance=sill*vs*cc;variogram=sill*vs*(1-cc)  
-                             } 
+
+                        if(tail>1e-05&&abs(eta)>1e-05){
+                               rho2=rho*rho; eta2=eta*eta; tail2=tail*tail;
+                               u=1-tail; a=1+rho;
+                               mu=(exp(eta2/(2*u))-1)/(eta*sqrt(u));
+                               vs=(exp(2*eta2/(1-2*tail))-2*exp(eta2/(2*(1-2*tail)))+1)/(eta2*sqrt(1-2*tail))-mu*mu;
+                               A1=exp(a*eta2/(1-tail*a));
+                               A2=2*exp(0.5*eta2*  (1-tail*(1-rho2))  / (u*u- tail2*rho2)  );
+                               A3=eta2*sqrt(u*u- rho2*tail*tail);
+                               cc=((A1-A2+1)/A3-mu*mu)/vs;
+                               covariance=sill*vs*cc;variogram=sill*vs*(1-cc)
+                            } 
+                        if(tail<=1e-05&&abs(eta)>1e-05){
+                              vs=( -exp(eta^2)+exp(eta^2*2))*eta^(-2)
+                              cc= (( -exp(eta^2)+exp(eta^2*(1+rho)))*eta^(-2))/vs
+                              covariance=sill*vs*cc;variogram=sill*vs*(1-cc) 
+                            } 
+                        if(tail>1e-05&&abs(eta)<=1e-05){
+                              vs=  (1-2*tail)^(-1.5)     
+                              cc=(-rho/((1+h*(tail-1))*(-1+tail+tail*rho)*(1+tail*(-2+tail-tail*rho^2))^0.5))/vs
+                              covariance=sill*vs*cc;variogram=sill*vs*(1-cc) 
+                            } 
+                        if(tail<=1e-05&&abs(eta)<=1e-05){
+                            covariance=sill*rho;variogram=sill*(1-rho)
+                            }  
+                                
+                      } 
                   }     
   if(sas) { if(bivariate) {}
                         else {
@@ -461,7 +484,7 @@ corrsas<-function(e,d,N,vv,rho1){
     return(mat)}
 CorrSAS<-Vectorize(corrsas, c("rho1"))
 ##########
-corr=CorrSAS(e,d,20,vs,corr)
+corr=CorrSAS(e,d,4,vs,corr)
 
 covariance=sill*vs*corr;variogram=sill*vs*(1-corr)  
                         }
@@ -515,9 +538,10 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
                      }
                   }
    #                   
-   if(binary||binomial||binomial2||geom||binomialneg||binomialnegZINB) {
+   if(binary||binomial||binomial2||geom||binomialneg||binomialnegZINB||Gaussian_misp_Binomial||Gaussian_misp_BinomialNeg) {
                     if(bivariate) {}
-                    if(!bivariate) {          
+                    if(!bivariate) {      
+                            
                            pp=pnorm(mu)
                            if(binary||binomial||binomial2) vv=min(fitted$n)*pp*(1-pp)
                            if(geom)             vv=(1-pp)/pp^2;
@@ -526,11 +550,12 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
                                      pg=pnorm(nuisance['pmu'])
                                      vv=fitted$n*(1-pp)*(1-pg)*(1+fitted$n*pg*(1-pp)) /pp^2
                                                }
+                           if(Gaussian_misp_Binomial||Gaussian_misp_BinomialNeg) vv=1                    
                            covariance=vv*correlation
                            variogram=vv*(1-correlation)
                            }
                    }
-     if(poisson) {
+     if(poisson||Gaussian_misp_Poisson) {
                     if(bivariate) {}
                     if(!bivariate) {   
                            correlation=(1-nuisance['nugget'])*correlation   
@@ -538,10 +563,28 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
                            vv=exp(mu);
                            z=2*vv/(1-corr2)
                            cc=corr2*(1-(besselI(z,0,expon.scaled = TRUE)+besselI(z,1,expon.scaled = TRUE)))
+                           if(Gaussian_misp_Poisson) vv=1   
                            covariance=vv*cc
                            variogram=vv*(1-cc)}
                    }
-
+    if(poissongamma) {
+                    if(bivariate) {}
+                    if(!bivariate) {   
+                           
+                       correlation=(1-nuisance['nugget'])*correlation 
+                       corr2=correlation^2 
+                       rho1=1-corr2
+                       a=nuisance['shape']
+                       b=exp(mu);
+                       KK=2+b*corr2
+                       dd=   ( b*(sqrt(b*rho)*KK)^(a) ) /((1+b)*(2+KK)^(0.5+a))
+                       aa=hypergeo::hypergeo((1 - a)/2, -a/2, 1, 4/KK^2)
+                       bb=(a + 1)*hypergeo::hypergeo((2-a)/2, -(1-a)/2, 1, 4/KK^2)/KK
+                       cc=Re(rho^2*(1-dd*(aa+bb)))
+                       covariance=vv*cc
+                       variogram=vv*(1-cc)
+                           }
+                   }
      if(poissonZIP) {
                     if(bivariate) {}
                     if(!bivariate) {   
@@ -645,8 +688,8 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
                 lines(lags_m, covariance,...)
                 if(show.range) abline(v=Range)}
             else{
-                plot(lags_m, covariance, type='l', ylim=c(0,
-                     max(covariance)), main="Spatial covariance",
+                plot(lags_m, covariance, type='l', #ylim=c(0,max(covariance)), 
+                     main="Spatial covariance",
                      xlab="Distance", ylab="Covariance",...)
                 if(show.range) abline(v=Range)}}
          }
@@ -654,7 +697,6 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
     # display the variogram function
     if(show.vario){
       if(bivariate&&!dyn){
-          #par(mfrow=c(2,2))
        plot(vario$centers,vario$variograms[1,], main="First semi-variogram",ylim=c(0,max(vario$variograms[1,])),
            xlim=c(0,max(vario$centers)),
                      xlab="Distance", ylab="Semi-Variogram",...)
@@ -675,7 +717,6 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
        lines(lags_m, variogram22, type='l',...)  }
  
    if(bivariate&&dyn){
-          #par(mfrow=c(2,2))
        plot(vario$centers,vario$variograms[1,], main="First semi-variogram",ylim=c(0,max(vario$variograms[1,])),
                      xlab="Distance", ylab="Semi-Variogram",...)
        lines(lags_m, variogram11, type='l',...)
@@ -693,7 +734,6 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
                 ncolp <- ncolp+1
                 if(plags || plagt) nrowp <- nrowp+1}
             else ncolp <- ncolp+plags+plagt
-            #par(mfrow=c(nrowp,ncolp))
             sup <- 0
             tup <- 0
             if(isvario){
@@ -737,6 +777,7 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
             if(loggauss)      vvv=(exp(nuisance["sill"])-1)#*(exp(mm['mean']))^2
             if(binomial)      vvv=fitted$n*pnorm(mm['mean'])*(1-pnorm(mm['mean']))
             if(poisson)       vvv=exp(mm['mean'])
+            if(poissongamma)  vvv=exp(mm['mean']*(1+1/nuisance["shape"]))
             if(poissonZIP){        p=pnorm(nuisance['pmu']); MM=exp(mm['mean']); 
                               vvv=(1-p)*MM*(1+p*MM)}
             if(geom)          vvv= (1-pnorm(mm['mean']))/pnorm(mm['mean'])^2
@@ -754,12 +795,11 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
                             }
             if(tukeyh2)  {        hr=nuisance["tail1"];hl=nuisance["tail2"];
                                   mm=(hr-hl)/(sqrt(2*pi)*(1-hl)*(1-hr))
-                              vvv=0.5*(1-2*hl)^(-3/2)+0.5*(1-2*hr)^(-3/2)-(mm)^2
+                                  vvv=0.5*(1-2*hl)^(-3/2)+0.5*(1-2*hr)^(-3/2)-(mm)^2
                          }
      
             ########
             if(plagt){
-
                 par(mai=c(.5,.5,.3,.3),mgp=c(1.6,.6,0))
                 plot(lagt_m, variogram[fix.lags,], xlab="Time",cex.axis=.8,cex.lab=.8,
                      ylab=vario.ylab, type="l", ylim=c(0,max(vvv,tup)), main=paste(vario.ylab,": temporal profile",
@@ -788,7 +828,9 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
 
                 bnds[1] <- min(bnds[1], min(vario$variograms))
                 bnds[2] <- max(bnds[2], max(vario$variograms))
-                plot(lags_m, variogram, type='l',  ylim=c(0,bnds[2]),
+                #ylim=c(0,bnds[2])
+                #if(!is.null(ylim))ylim=c(0,bnds[2])
+                plot(lags_m, variogram, type='l',  
                      main=vario.main,xlab="Distance",
                      ylab=vario.ylab,...)
                 points(vario$centers, vario$variograms,...)
@@ -797,7 +839,7 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
         
 
 
-    if(ispatim) par(mai=c(1.02 ,0.82 ,0.82 ,0.42),mgp=c(3,1,0))
+    if(ispatim) par(mai=c(1.02 ,0.85 ,0.85 ,0.45),mgp=c(3,1,0))
     # return the estimated covariance function
     if(answer.cov) {result <- list(lags=lags_m,lagt=lagt_m, covariance=covariance)}
     # return the estimated variogram/lorelogram function
@@ -811,7 +853,11 @@ covariance=sill*vs*corr;variogram=sill*vs*(1-corr)
             if(bivariate){
                 if(gaussian) {result$variogram11 <- variogram11;result$variogram12 <- variogram12;result$variogram22 <- variogram22}
                 }}}
+
+       #print("here")
+       #par(mfrow=c(1,1))
+       #par(resetPar())
+  #par(opar) 
     if(!is.null(result))
-    #par(mfrow=c(1,1))
     return(result)
   }

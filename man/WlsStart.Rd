@@ -11,7 +11,7 @@
 WlsStart(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance, fcall,
         fixed, grid,likelihood, maxdist, neighb,maxtime, model, n, param, 
         parscale, paramrange, radius,start, taper, tapsep, type, varest,
-        vartype, weighted, winconst,winconst_t, winstp_t, winstp,X,memdist)
+        vartype, weighted, winconst,winconst_t, winstp_t, winstp,copula,X,memdist,nosym)
 }
 \arguments{
  \item{coordx}{A numeric (\eqn{d \times 2}{d x 2})-matrix (where
@@ -82,15 +82,23 @@ WlsStart(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance, fcall,
          in the sub-sampling procedure.}
  \item{winstp_t}{Numeric; a value in \eqn{(0,1]} for defining the the proportion of 
       overlapping in the temporal  sub-sampling procedure.}
+         \item{copula}{The type of copula.}
     \item{X}{Numeric; Matrix of spatio(temporal)covariates in the linear mean specification.}  
         \item{memdist}{ Logical; if \code{TRUE} then  the distances in the  composite likelihood 
       are computed before  the optmization. }
+      \item{nosym}{Logical; if TRUE two simmetric weights are not considered }
 }
+
+\value{A list with  a set of useful informations in the estimation procedure.}
+
+
+\details{Internal function called by  \code{\link{GeoFit}}.}
 
 \seealso{\code{\link{GeoFit}}.}
 
-\author{Moreno Bevilacqua, \email{moreno.bevilacqua@uv.cl},\url{https://sites.google.com/a/uv.cl/moreno-bevilacqua/home},
-Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/}
+\author{Moreno Bevilacqua, \email{moreno.bevilacqua89@gmail.com},\url{https://sites.google.com/view/moreno-bevilacqua/home},
+Víctor Morales Oñate, \email{victor.morales@uv.cl}, \url{https://sites.google.com/site/moralesonatevictor/},
+Christian", Caamaño-Carrillo, \email{chcaaman@ubiobio.cl},\url{https://www.researchgate.net/profile/Christian-Caamano}
 }
 
 
