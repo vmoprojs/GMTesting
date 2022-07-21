@@ -281,8 +281,8 @@ int h=0, i=0, j=0;
   if(md<mm[1]) mm[1]=md;
   step=mm[1]/(*nbins-1);
   bins[0]=0;
-  for(h=1;h<*nbins;h++)
-    bins[h]=bins[h-1]+step;
+    for(h=1;h<*nbins;h++){
+        bins[h]=bins[h-1]+step;}
   //computes the empirical variogram:
   // Computes the log-likelihood:
     for(t=0;t<ntime[0];t++){
