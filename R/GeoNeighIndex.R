@@ -67,13 +67,13 @@ nn2Geo <- function(x,y, K = 1,distance=0,maxdist=NULL,radius=6371)
      
             if(is.null(maxdist)) 
                {
-               #nearest = RANN::nn2(x,y,k = K,treetype = c("kd"))} ### case neighboord
+               # nearest = RANN::nn2(x,y,k = K,treetype = c("kd"))} ### case neighboord
                nearest = nabor::knn(x,y,k = K)} ### case neighboord
             else     {
                     
                      K=min(K-1,nrow(x)) # case of  maxdist 
                     # nearest = RANN::nn2(x,y,searchtype = c("radius"),
-                     #          treetype = c("kd"),radius = maxdist,k=K  )
+                    #          treetype = c("kd"),radius = maxdist,k=K  )
                        nearest = nabor::knn(x,y,radius = maxdist,k=K  )
 
                      }
