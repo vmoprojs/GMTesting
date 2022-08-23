@@ -1646,7 +1646,7 @@ else
 #### it works when CL  using neighb  or maxdist AND neighb 
 #############################################################
 { 
-
+  print("1649 StartParam----")
 if(typereal!="Independence") {
 
   ########################## 
@@ -1662,14 +1662,16 @@ if(space)   #  spatial case
 ##########################################
   K=neighb
   x=cbind(coordx, coordy)
-
+  print("1665 StartParam----")
   #tt0 <- proc.time()
   sol=GeoNeighIndex(coordx=x,distance=distance1,maxdist=maxdist,neighb=K,radius=radius)
 #tt0 <- proc.time()-tt0;print(tt0[3])
-
+  print("1669 StartParam----")
  ###    deleting symmetric indexes with associate distances
  if(nosym){
+   print("1672 StartParam----")
   aa=GeoNosymindices(cbind(sol$colidx,sol$rowidx),sol$lags)
+  print("1674 StartParam----")
   sol$rowidx=c(aa$xy[,1])
   sol$colidx=c(aa$xy[,2])
   sol$lags=c(aa$d) }
@@ -1684,11 +1686,17 @@ if(space)   #  spatial case
   ## loading space distances in memory 
   mmm=1;ttt=1
 if(weighted)  mmm=max(sol$lags)
-
+  print("1689 StartParam----")
+  aux = list(as.integer(numcoord),  as.integer(numtime),  
+             as.double(sol$lags),as.integer(nn),as.double(mmm),as.double(ttt),
+             as.double(sol$lagt),as.integer(nn),
+             as.integer(spacetime),as.integer(bivariate),as.integer(1),as.integer(1))
+  print(str(aux))
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(numtime),  
     as.double(sol$lags),as.integer(nn),as.double(mmm),as.double(ttt),
     as.double(sol$lagt),as.integer(nn),
     as.integer(spacetime),as.integer(bivariate),as.integer(1),as.integer(1)) 
+  print("1694 StartParam----")
 } 
 ##############################################   
 if(spacetime)   #  space time  case
