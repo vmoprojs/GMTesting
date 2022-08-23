@@ -1108,8 +1108,11 @@ else{
     REprintf("1108 utility.c\n");
   if(isbiv[0]) {  /// spatial bivariate  case
         lags=(double *) Calloc(*npairs,double);
+      REprintf("1111 utility.c\n");
         first=(int *) Calloc(*npairs,int);
+      REprintf("1113 utility.c\n");
         second=(int *) Calloc(*npairs,int);
+      REprintf("1115 utility.c\n");
 
          for (i=0;i<*npairs;i++) {
             lags[i]=h[i];
@@ -1117,6 +1120,7 @@ else{
             second[i]=two[i];
 
         }
+      REprintf("1123 utility.c\n");
 
       }
     REprintf("1122 utility.c\n");
