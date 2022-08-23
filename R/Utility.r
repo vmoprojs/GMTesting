@@ -1580,7 +1580,7 @@ else{          # all the rest
 ### o si hay CL with  maxdist!!!
   print("1581 StartParam----")
 if(distC||fcall=="Simulation"||(fcall=="Fitting"&likelihood==2)||(fcall=="Fitting"&typereal=="GeoWLS")) {
-
+  print("1583 StartParam----")
 if(fcall=="Fitting"&mem==TRUE&(!space)&!tapering)   {vv=length(NS); numcoord=NS[vv]+ns[vv]} # number of space time point in the case of coordxdyn
 
   print("1586 StartParam----")
