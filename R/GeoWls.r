@@ -144,9 +144,6 @@ WlsStart <- function(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distan
         return(list(lower=lower, upper=upper))
     }
     print("146 WlsStart---")
-    print(coordx)
-    print(coordy)
-    print(coordt)
     aux = list(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance, fcall, fixed,
     grid, likelihood, maxdist,neighb, maxtime, model, n, 
     param, parscale, paramrange, radius,  start, taper, tapsep,

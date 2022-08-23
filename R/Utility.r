@@ -1077,7 +1077,7 @@ StartParam <- function(coordx, coordy, coordt,coordx_dyn, corrmodel, data, dista
                       paramrange, radius, start, taper, tapsep, type,
                       typereal, varest, vartype, weighted, winconst, winstp,winconst_t, winstp_t,copula, X,memdist,nosym)
 {
-  print("Ok StartParam----")
+  print("1080 StartParam----")
     ### START Includes internal functions:
     replicates=1
     # Check if the correlation is bivariate
@@ -1148,11 +1148,13 @@ if(method1=="euclidean")
     ### END Includes internal functions
     # Set the correlation and  if the correlation is space-time(T or F) or bivariate (T o F)  or univariate (case spacetime=F and bivariate=F)p
     corrmodel<-CkCorrModel(corrmodel)
+    print("1151 StartParam----")
     bivariate <- CheckBiv(corrmodel); if(bivariate) coordt=c(1,2)
+    print("1153 StartParam----")
     spacetime <- CheckST(corrmodel)
     isdyn=!is.null(coordx_dyn)
     space=!(spacetime||bivariate)
-
+    print("1157 StartParam----")
     if(!bivariate)
        {
         if(is.null(X))  {X=1;num_betas=1}
@@ -1160,13 +1162,14 @@ if(method1=="euclidean")
         {if(is.list(X))  num_betas=ncol(X[[1]])
            else  num_betas=ncol(X) }
     }
+    print("1165 StartParam----")
     if(bivariate){
         if(is.null(X))  {X=1;num_betas=c(1,1)}
         else
         { if(is.list(X))  num_betas=c(ncol(X[[1]]),ncol(X[[2]]))
             else  num_betas=c(ncol(X),ncol(X)) }}
     namesnuis <- NuisParam(model,bivariate,num_betas,copula)
-  
+    print("1172 StartParam----")
 
 
     ltimes=length(coordt)
@@ -1175,7 +1178,7 @@ if(method1=="euclidean")
                coordx=cc[,1];coordy=cc[,2]; 
              }
 
-
+    print("1181 StartParam----")
     ### Set returning variables and initialize the model parameters:
     # Initialises the starting and fixed parameters' names
     error <- NULL
