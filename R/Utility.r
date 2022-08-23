@@ -1755,11 +1755,17 @@ if(bivariate)   # bivariate case
   mmm=1
 if(weighted) { mmm=max(sol$lags) }
   print("1757 StartParam----")
+  aux = list("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  
+             as.double(sol$lags),as.integer(nn),as.double(mmm),
+             as.double(1),as.integer(nn),as.double(1),
+             as.integer(spacetime),as.integer(bivariate),as.integer(sol$first),as.integer(sol$second))
+  cat("\n--- Aquí\n")
+  print(str(aux))
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  
     as.double(sol$lags),as.integer(nn),as.double(mmm),
     as.double(1),as.integer(nn),as.double(1),
     as.integer(spacetime),as.integer(bivariate),as.integer(sol$first),as.integer(sol$second)) 
-  print("1757 StartParam----")
+  print("1762 StartParam----")
 } #### end bivariate case
 
     numpairs <- gb$numpairs
