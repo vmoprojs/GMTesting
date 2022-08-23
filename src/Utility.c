@@ -1062,14 +1062,14 @@ void DeleteGlobalVar()
   return;
 }
 /*#######################################################################*/
-void SetGlobalVar2 (int *nsite, int *times, 
+void SetGlobalVar2 (int *nsite, int *times,
                     double *h,int *nn, double  *maxh,
-                    double *u,int *tt,  double *maxu,   
+                    double *u,int *tt,  double *maxu,
                     int *st,int *biv,int *one,int *two)
 {
 
 
-    int i=0; 
+    int i=0;
 
   ncoord=(int *) Calloc(1,int);//number of total spatial coordinates
   ncoord[0]=*nsite;
@@ -1084,11 +1084,12 @@ void SetGlobalVar2 (int *nsite, int *times,
 
   npairs=(int *) Calloc(1,int);  // number of pairs involved
   npairs[0]=nn[0];
-    
+   
     isbiv=(int *) Calloc(1,int);//is a bivariate random field?
-    isbiv[0]=biv[0];  
-    isst=(int *) Calloc(1,int);//is a spatio-temporal random field?
-    isst[0]=st[0]; 
+    isbiv[0]=biv[0];
+
+   isst=(int *) Calloc(1,int);//is a spatio-temporal random field?
+    isst[0]=st[0];
 
 
 
@@ -1097,16 +1098,16 @@ void SetGlobalVar2 (int *nsite, int *times,
         for (i=0;i<*npairs;i++) lags[i]=h[i];
     }
 
-
+else{
     if(isst[0]) {  /// spatio teemporal case
         lags=(double *) Calloc(*npairs,double);
         lagt=(double *) Calloc(*npairs,double);
         for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
     }
-  
+ 
 
   if(isbiv[0]) {  /// spatial bivariate  case
-        lags=(double *) Calloc(*npairs,double);   
+        lags=(double *) Calloc(*npairs,double);
         first=(int *) Calloc(*npairs,int);
         second=(int *) Calloc(*npairs,int);
 
@@ -1115,36 +1116,28 @@ void SetGlobalVar2 (int *nsite, int *times,
             first[i]=one[i];
             second[i]=two[i];
 
-        }          
+        }
 
       }
+   }
       return;
 }
+
 /*#######################################################################*/
 
 void DeleteGlobalVar2()
 {
-
-  //int i=0;
-  // Delete all the global variables:
- // Free(maxdist);Free(maxtime);
-  //Free(ncoordx);Free(ncoordy); 
   Free(ncoord);  Free(ntime);
+  Free(maxdist);Free(maxtime);
+
+  if(!isst[0]&&!isbiv[0]) { Free(lags);}
+  else {
+  if(isst[0]) {Free(lags);Free(lagt);}
+  if(isbiv[0]){Free(lags);Free(first);Free(second);}
+  }
+  Free(isbiv);
+  Free(isst);
   Free(npairs);
-  Free(maxdist);
-  Free(maxtime);
-  //Free(type);Free(REARTH);
-  //Free(tapsep);
-  //if(isbiv[0])for(i=0;i<ntime[0];i++)  Free(dista[i]);
-  //Free(dista);
-
-  Free(lags);
-  if(isst[0]) {Free(lagt);}
-  if(isbiv[0]){Free(first);Free(second);}
-
-  Free(isbiv); //Free(istap);
-  Free(isst);//Free(ismem);
- // Free(cdyn);
   return;
 }
 
