@@ -1579,6 +1579,8 @@ else{          # all the rest
 ### aca paso solo para  simular o maximum likelihood o variogram 
 ### o si hay CL with  maxdist!!!
   print("1581 StartParam----")
+  aux =list(distC,fcall,likelihood,typereal)
+  print(str(aux))
 if(distC||fcall=="Simulation"||(fcall=="Fitting"&likelihood==2)||(fcall=="Fitting"&typereal=="GeoWLS")) {
   print("1583 StartParam----")
 if(fcall=="Fitting"&mem==TRUE&(!space)&!tapering)   {vv=length(NS); numcoord=NS[vv]+ns[vv]} # number of space time point in the case of coordxdyn
