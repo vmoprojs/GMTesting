@@ -1077,6 +1077,7 @@ StartParam <- function(coordx, coordy, coordt,coordx_dyn, corrmodel, data, dista
                       paramrange, radius, start, taper, tapsep, type,
                       typereal, varest, vartype, weighted, winconst, winstp,winconst_t, winstp_t,copula, X,memdist,nosym)
 {
+  print("Ok StartParam----")
     ### START Includes internal functions:
     replicates=1
     # Check if the correlation is bivariate
