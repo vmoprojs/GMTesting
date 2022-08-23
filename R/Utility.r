@@ -1186,7 +1186,7 @@ if(method1=="euclidean")
     namesfixed <- namesstart <- namessim <- NULL
     numfixed <- numstart <- 0
     # Set the model, likelihood, correlation and the nuisance parameters:
-   
+    print("1189 StartParam----")
     model <- CkModel(model)
     flagnuis <- NULL
     namescorr <- CorrelationPar(corrmodel)
@@ -1196,7 +1196,7 @@ if(method1=="euclidean")
     flagcorr <- NULL
     ### START settings the data structure:
     # set the coordinates sizes:
-
+    print("1199 StartParam----")
     if(is.null(coordx_dyn))  
     {
 
@@ -1221,13 +1221,13 @@ if(method1=="euclidean")
        coordx <- coords[,1]; coordy <- coords[,2]
        numcoord <- numcoordx <- numcoordy <- length(coordx)
     }
-
+    print("1224 StartParam----")
 
    if(!space && is.null(coordx_dyn)) {coordx=rep(coordx,ltimes);coordy=rep(coordy,ltimes);}
     
     NS=cumsum(ns)
     if(!space)   NS=c(0,NS)[-(length(ns)+1)]
-
+    print("1230 StartParam----")
 
     # initialize tapering variables:
     tapering=ia=idx=ja=colidx=rowidx=integer(1)
@@ -1235,7 +1235,7 @@ if(method1=="euclidean")
     tapmodel=0
     cutoff <- FALSE
     distance<-CheckDistance(distance)
-
+    print("1238 StartParam----")
     ### END settings the data structure
     # START code for the simulation procedure
     if(fcall=="Fitting"){
@@ -1474,6 +1474,7 @@ if(method1=="euclidean")
                                              
     }
     # END code for the fitting procedure
+    print("1477 StartParam----")
 ##################################################################################################################
 # START code for the simulation procedure
     if(fcall=="Simulation"){
@@ -1506,13 +1507,13 @@ if(method1=="euclidean")
         K=neighb
 }  # END code for the simulation procedure
 #####################################################################################
-
+    print("1510 StartParam----")
     numpairs <- integer(1)
     srange <- double(1)
     trange <- double(1)
 
 if(typereal=="Independence"){ maxdist=NULL;maxtime=NULL;K=neighb}
-
+    print("1516 StartParam----")
 #################
 distC=FALSE
 if(!tapering)
@@ -1524,7 +1525,7 @@ if(!tapering)
     isinit <- as.integer(1)
     if(is.null(tapsep))  tapsep=c(0.5,0.5)
     else  {if(length(tapsep)==1) tapsep=c(tapsep,0)}
-
+    print("1528 StartParam----")
     mem=FALSE
     if(tapering||memdist)  { mem=TRUE }   #### NB
 
@@ -1537,12 +1538,14 @@ if(!tapering)
                     if(typereal=="Independence") colidx=rowidx=0
                     else         colidx=rowidx=integer(nn*(nn-1)/2)}
            
-      }
+    }
+    
+    print("1543 StartParam----")
     if(bivariate) {
     if(!srange[1]&&!srange[2])  srange=c(srange,0,0)
     if(is.na(srange[3])) srange[3]=srange[2];
     if(is.na(srange[4])) srange[4]=srange[2];}
-    
+    print("1548 StartParam----")
   
     ###
     if(CheckSph(corrmodel))   radius=1
@@ -1756,7 +1759,7 @@ if(is.null(coordt)) coordt=1
 
  }
 }
-
+    print("1762 StartParam----")
 ########################################################################################
 ########################################################################################
 ########################################################################################
