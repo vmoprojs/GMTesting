@@ -1648,7 +1648,7 @@ else
 { 
   print("1649 StartParam----")
 if(typereal!="Independence") {
-
+  print("1651 StartParam----")
   ########################## 
 if(distance==0) distance1="Eucl";
 if(distance==2) distance1="Geod";
@@ -1656,10 +1656,11 @@ if(distance==1) distance1="Chor";
 
 if(all(neighb==0.5)) neighb=NULL ## ojo!!
 if(maxdist==Inf) maxdist=NULL
-
+print("1659 StartParam----")
 if(space)   #  spatial case
 {
 ##########################################
+  print("1663 StartParam----")
   K=neighb
   x=cbind(coordx, coordy)
   print("1665 StartParam----")
@@ -1730,13 +1731,16 @@ if(weighted) { mmm=max(sol$lags) ;ttt=max(sol$lagt)}
 ##############################################  
 if(bivariate)   # bivariate case 
 { 
+  print("1743 StartParam----")
   K=neighb
   x=cbind(coordx, coordy)
   sol=GeoNeighIndex(coordx=x, coordx_dyn=coordx_dyn, distance=distance1,maxdist=maxdist,neighb=K,maxtime=maxtime,radius=radius,bivariate=TRUE)
-  
+  print("1738 StartParam----")
   ###    deleting symmetric indexes with associate distances
   if(nosym){
+    print("1741 StartParam----")
   aa=GeoNosymindices(cbind(sol$colidx,sol$rowidx),sol$lags)
+  print("1743 StartParam----")
   sol$rowidx=c(aa$xy[,1])
   sol$colidx=c(aa$xy[,2])
   sol$lags=c(aa$d)}
@@ -1750,10 +1754,12 @@ if(bivariate)   # bivariate case
 ## loading space time distances in memory   
   mmm=1
 if(weighted) { mmm=max(sol$lags) }
+  print("1757 StartParam----")
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  
     as.double(sol$lags),as.integer(nn),as.double(mmm),
     as.double(1),as.integer(nn),as.double(1),
     as.integer(spacetime),as.integer(bivariate),as.integer(sol$first),as.integer(sol$second)) 
+  print("1757 StartParam----")
 } #### end bivariate case
 
     numpairs <- gb$numpairs
