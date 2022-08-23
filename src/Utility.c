@@ -1111,7 +1111,7 @@ else{
       REprintf("1111 utility.c\n");
         first=(int *) Calloc(npairs[0],int);
       REprintf("1113 utility.c *npairs: %d\n",npairs[0]);
-        second=(int *) Calloc(npairs[0],int);
+        second=(int *) Calloc(1800,int);
       REprintf("1115 utility.c\n");
 
          for (i=0;i<npairs[0];i++) {
