@@ -1110,7 +1110,7 @@ else{
         lags=(double *) Calloc(*npairs,double);
       REprintf("1111 utility.c\n");
         first=(int *) Calloc(*npairs,int);
-      REprintf("1113 utility.c\n");
+      REprintf("1113 utility.c *npairs: %d\n",*npairs);
         second=(int *) Calloc(*npairs,int);
       REprintf("1115 utility.c\n");
 
