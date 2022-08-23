@@ -1553,7 +1553,7 @@ if(!tapering)
 
     aa=double(5);for(i in 1:length(tapsep)) aa[i]=tapsep[i];tapsep=aa
  
-
+    print("1556 StartParam----")
 
 if(fcall=="Fitting"&likelihood==2&!is.null(neighb)) mem=FALSE # Vecchia gp case
 if(fcall=="Fitting"&likelihood==2||fcall=="Simulation") mem=FALSE 
@@ -1578,11 +1578,12 @@ else{          # all the rest
 #############################################################
 ### aca paso solo para  simular o maximum likelihood o variogram 
 ### o si hay CL with  maxdist!!!
+  print("1581 StartParam----")
 if(distC||fcall=="Simulation"||(fcall=="Fitting"&likelihood==2)||(fcall=="Fitting"&typereal=="GeoWLS")) {
 
 if(fcall=="Fitting"&mem==TRUE&(!space)&!tapering)   {vv=length(NS); numcoord=NS[vv]+ns[vv]} # number of space time point in the case of coordxdyn
 
-
+  print("1586 StartParam----")
 
 #gb=dotCall64::.C64('SetGlobalVar',SIGNATURE = c(
 #         "integer","double","double","double","integer", "integer","integer",  #7
@@ -1605,7 +1606,7 @@ if(fcall=="Fitting"&mem==TRUE&(!space)&!tapering)   {vv=length(NS); numcoord=NS[
 #             "r", "r", "r"),
 #             PACKAGE='GeoModels', VERBOSE = 0, NAOK = TRUE)
 
-
+  print("1609 StartParam----")
 srange[which(srange==Inf)]=1e+50;trange[which(trange==Inf)]=1e+50
 gb=.C('SetGlobalVar',as.integer(bivariate), as.double(coordx), as.double(coordy), as.double(coordt),as.integer(grid),ia=as.integer(ia),idx=as.integer(idx),  #7
            isinit=as.integer(isinit),ja=as.integer(ja), as.integer(mem), as.integer(numcoord),as.integer( numcoordx),  as.integer(numcoordy), #6
@@ -1613,7 +1614,7 @@ gb=.C('SetGlobalVar',as.integer(bivariate), as.double(coordx), as.double(coordy)
             as.integer(numtime),as.double(trange), as.integer(tapering), as.integer(tapmodel),as.integer(distance),as.integer(weighted), #6
            colidx= as.integer(colidx),rowidx= as.integer(rowidx), # 2
             as.integer(ns), as.integer(NS), as.integer(isdyn))
-
+print("1617 StartParam----")
 
 rm(colidx);rm(rowidx)
 if(type=="Tapering") {rm(idx);rm(ja);rm(ia)}
@@ -1634,6 +1635,7 @@ numpairs <- gb$numpairs
     idx <- idx[1:numpairs]
     ja  <- ja[1:numpairs]
     K=neighb
+    print("1638 StartParam----")
 }
 #######################################################################
 else   
@@ -1759,7 +1761,7 @@ if(is.null(coordt)) coordt=1
 
  }
 }
-    print("1762 StartParam----")
+    print("1764 StartParam----")
 ########################################################################################
 ########################################################################################
 ########################################################################################
