@@ -54,7 +54,7 @@ GeoNeighborhood = function(data=NULL, coordx, coordy=NULL, coordt=NULL, coordx_d
   
   ## computing neigh indexes
   if(distance=="Geod"||distance=="Chor")  {
-                                           # out<- RANN::nn2(coords_p,loc_p, k=neighb,searchtype=searchtype,radius=maxdist)
+                                           #out<- RANN::nn2(coords_p,loc_p, k=neighb,searchtype=searchtype,radius=maxdist)
                                            out<- nabor::knn(coords_p,loc_p, k=neighb,radius=maxdist)
                                            }
   if(distance=="Eucl")                    {
