@@ -1759,7 +1759,7 @@ if(weighted) { mmm=max(sol$lags) }
              as.double(sol$lags),as.integer(nn),as.double(mmm),#5
              as.double(1),as.integer(nn),as.double(1),#8
              as.integer(spacetime),as.integer(bivariate),#10
-             as.integer(mmm),as.integer(mmm))#12
+             as.integer(sol$first),as.integer(sol$second))#12
   cat("\n--- Aquí\n")
   print(str(aux))
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  

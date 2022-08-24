@@ -1099,7 +1099,7 @@ void SetGlobalVar2 (int *nsite, int *times,//2
   maxtime[0]=*maxu;
 
   npairs=(int *) Calloc(1,int);  // number of pairs involved
-  npairs[0]=*nn;
+  npairs[0]=100;
    
     isbiv=(int *) Calloc(1,int);//is a bivariate random field?
     isbiv[0]=biv[0];
