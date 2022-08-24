@@ -1227,7 +1227,7 @@ else{
 
 
 
-void SetGlobalVar2 (int *nsite, int *times,//2
+/*void SetGlobalVar2 (int *nsite, int *times,//2
                     double *h,int *nn, double  *maxh,//5
                     double *u,int *tt,  double *maxu,//8
                     int *st,int *biv,int *one,int *two)//12
@@ -1297,7 +1297,81 @@ else{
    }
    // REprintf("1125 utility.c\n");
       return;
+}*/
+
+
+void SetGlobalVar2 (int *nsite, int *times,//2
+                    double *h,int *nn, double  *maxh,//5
+                    double *u,int *tt,  double *maxu,//8
+                    int *st,int *biv,int *one,int *two)//12
+{
+
+
+   int i=0;
+
+    ncoord=(int *)R_Calloc(1,sizeof(int));//number of total spatial coordinates
+  ncoord[0]=*nsite;
+    ntime=(int *)R_Calloc(1,sizeof(int));//number of times
+  ntime[0]=*times;
+
+    maxdist=(double *)R_Calloc(1,sizeof   (double));
+  maxdist[0]=*maxh;
+
+   maxtime=( double *)R_Calloc(1,sizeof   (double));
+  maxtime[0]=*maxu;
+
+    npairs=(int *)R_Calloc(1,sizeof(int));  // number of pairs involved
+  npairs[0]=nn[0];
+   
+    isbiv=(int *)R_Calloc(1,sizeof(int));//is a bivariate random field?
+    isbiv[0]=biv[0];
+
+    isst=(int *)R_Calloc(1,sizeof(int));//is a spatio-temporal random field?
+    isst[0]=st[0];
+
+
+
+   if(!isst[0]&&!isbiv[0]) {  /// spatial case
+       lags=(double *)R_Calloc(npairs[0],sizeof   (double));
+        for (i=0;i<*npairs;i++) lags[i]=h[i];
+    }
+
+else{
+    if(isst[0]) {  /// spatio teemporal case
+        lags=(double *)R_Calloc(npairs[0],sizeof   (double));
+        lagt=(double *)R_Calloc(npairs[0],sizeof   (double));
+        for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
+    }
+ 
+   // REprintf("1108 utility.c\n");
+ if(isbiv[0]) {  // spatial bivariate  case
+    //    lags=(double *) Calloc(npairs[0],sizeof   (double));
+    lags=(double *)R_Calloc(npairs[0],sizeof   (double));
+    
+      //REprintf("1111 utility.c\n");
+        //first=(int *) Calloc(npairs[0],sizeof(int));
+    first=(int *)R_Calloc(npairs[0],sizeof(int));
+     // REprintf("1113 utility.c *npairs: %d\n",*npairs);
+        //second=(int *) Calloc(npairs[0],sizeof(int));
+    second= (int *)R_Calloc(npairs[0],sizeof(int));
+     // REprintf("1115 utility.c\n");
+      
+         for (i=0;i<*npairs;i++) {
+            lags[i]=h[i];
+            first[i]=one[i];
+            second[i]=two[i];
+            REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first[i],second[i]);
+
+        }
+     // REprintf("1123 utility.c\n");
+
+      }
+    //REprintf("1122 utility.c\n");
+   }
+   // REprintf("1125 utility.c\n");
+      return;
 }
+
 /*#######################################################################*/
 
 void DeleteGlobalVar2()
