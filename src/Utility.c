@@ -1123,32 +1123,7 @@ else{
     }
  
     REprintf("1108 utility.c\n");
-  if(isbiv[0]) {  /// spatial bivariate  case
-        //lags=(double *) Calloc(*npairs,double);
-      //lags=R_Calloc(*npairs,double);
-      /*
-      lags = (double*)malloc(*npairs * sizeof(double));
-      REprintf("1111 utility.c\n");
-        //first=(int *) Calloc(*npairs,int);
-      //first=R_Calloc(*npairs,int);
-      first = (int*)malloc(*npairs * sizeof(int));
-      REprintf("1113 utility.c *npairs: %d\n",*npairs);
-        //second=(int *) Calloc(*npairs,int);
-      //second=R_Calloc(*npairs,int);
-      second = (int*)malloc(*npairs * sizeof(int));
-      REprintf("1115 utility.c\n");
-
-         for (i=0;i<*npairs;i++) {
-            lags[i]=h[i];
-            first[i]=one[i];
-            second[i]=two[i];
-
-        }
-      REprintf("1123 utility.c\n");
-
-      }
-    REprintf("1122 utility.c\n");*/
-   }
+  
       return;
     REprintf("1125 utility.c\n");
 }
