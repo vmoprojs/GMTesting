@@ -968,19 +968,22 @@ else {  //spatio temporal case or bivariate case
                    else maxtime[0]=-LOW; 
         }
        if(isbiv[0])              {
+           REprintf("971 \n");
                                    int i=0;
                                    dista= (double **) Calloc(ntime[0],double *);
+           REprintf("974 \n");
                                    if(dista==NULL) {*ismal=0; return;}
                                    for(i=0;i<ntime[0];i++){
                                    dista[i]=(double *) Calloc(ntime[0],double);
                                    if(dista[i]==NULL) {*ismal=0; return;}}
-                                  
+           REprintf("979 \n");
                                   if(srange[1]) maxdist[0]=srange[1];
                                   else maxdist[0]=-LOW;
                                   if(srange[2]) maxdist[1]=srange[2];
                                   else maxdist[1]=-LOW;
                                   if(srange[3]) maxdist[2]=srange[3];
                                   else maxdist[2]=-LOW;
+           REprintf("986 \n");
                                   dista[0][0]=maxdist[0];dista[0][1]=maxdist[1];dista[1][0]=dista[0][1];dista[1][1]=maxdist[2]; 
                                   }
      if(istap[0])  // tapering case
@@ -1107,14 +1110,14 @@ else{
  
     REprintf("1108 utility.c\n");
   if(isbiv[0]) {  /// spatial bivariate  case
-        lags=(double *) Calloc(npairs[0],double);
+        lags=(double *) Calloc(*npairs,double);
       REprintf("1111 utility.c\n");
-        first=(int *) Calloc(npairs[0],int);
-      REprintf("1113 utility.c *npairs: %d\n",npairs[0]);
-        second=(int *) Calloc(1800,int);
+        first=(int *) Calloc(*npairs,int);
+      REprintf("1113 utility.c *npairs: %d\n",*npairs);
+        second=(int *) Calloc(*npairs,int);
       REprintf("1115 utility.c\n");
 
-         for (i=0;i<npairs[0];i++) {
+         for (i=0;i<*npairs;i++) {
             lags[i]=h[i];
             first[i]=one[i];
             second[i]=two[i];
