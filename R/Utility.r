@@ -1688,10 +1688,10 @@ if(space)   #  spatial case
   mmm=1;ttt=1
 if(weighted)  mmm=max(sol$lags)
   print("1689 StartParam----")
-  aux = list(as.integer(numcoord),  as.integer(numtime),  
-             as.double(sol$lags),as.integer(nn),as.double(mmm),as.double(ttt),
-             as.double(sol$lagt),as.integer(nn),
-             as.integer(spacetime),as.integer(bivariate),as.integer(1),as.integer(1))
+  aux = list(as.integer(numcoord),  as.integer(numtime),  #2
+             as.double(sol$lags),as.integer(nn),as.double(mmm),as.double(ttt),#6
+             as.double(sol$lagt),as.integer(nn),#8
+             as.integer(spacetime),as.integer(bivariate),as.integer(1),as.integer(1))#12
   print(str(aux))
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(numtime),  
     as.double(sol$lags),as.integer(nn),as.double(mmm),as.double(ttt),
@@ -1758,7 +1758,8 @@ if(weighted) { mmm=max(sol$lags) }
   aux = list("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  
              as.double(sol$lags),as.integer(nn),as.double(mmm),
              as.double(1),as.integer(nn),as.double(1),
-             as.integer(spacetime),as.integer(bivariate),as.integer(sol$first),as.integer(sol$second))
+             as.integer(spacetime),as.integer(bivariate),
+             as.integer(sol$first),as.integer(sol$second))
   cat("\n--- Aquí\n")
   print(str(aux))
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  

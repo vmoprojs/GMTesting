@@ -1078,10 +1078,10 @@ void DeleteGlobalVar()
   return;
 }
 /*#######################################################################*/
-void SetGlobalVar2 (int *nsite, int *times,
-                    double *h,int *nn, double  *maxh,
-                    double *u,int *tt,  double *maxu,
-                    int *st,int *biv,int *one,int *two)
+void SetGlobalVar2 (int *nsite, int *times,//2
+                    double *h,int *nn, double  *maxh,//5
+                    double *u,int *tt,  double *maxu,//8
+                    int *st,int *biv,int *one,int *two)//12
 {
 
 
@@ -1098,7 +1098,7 @@ void SetGlobalVar2 (int *nsite, int *times,
    maxtime=(double *) Calloc(1,double);
   maxtime[0]=*maxu;
 
-  npairs=(int *) Calloc(1,int);  // number of pairs involved
+  npairs=R_Calloc(1,int);  // number of pairs involved
   npairs[0]=nn[0];
    
     isbiv=(int *) Calloc(1,int);//is a bivariate random field?
@@ -1162,7 +1162,7 @@ void DeleteGlobalVar2()
   }
   Free(isbiv);
   Free(isst);
-  Free(npairs);
+    R_Free(npairs);
   return;
 }
 
