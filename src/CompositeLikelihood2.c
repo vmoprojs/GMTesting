@@ -2160,6 +2160,7 @@ void Comp_Pair_Gauss_biv2mem(int *cormod, double *data1,double *data2,int *NN,
 {
     Rprintf("biv2mem--2161\n");
     int i=0;
+    Rprintf("---%f %f \n",data1[i],data2[i]);
     double  dens=0.0,weights=1.0;
     Rprintf("biv2mem--2164\n");
     Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second[i]);
