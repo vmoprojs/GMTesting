@@ -1133,13 +1133,13 @@ else{
         //second=(int *) Calloc(npairs[0],sizeof(int));
     int *second= calloc(npairs[0],sizeof(int));
       REprintf("1115 utility.c\n");
-      /*
+      
          for (i=0;i<*npairs;i++) {
             lags[i]=h[i];
             first[i]=one[i];
             second[i]=two[i];
 
-        }*/
+        }
       REprintf("1123 utility.c\n");
 
      // }
