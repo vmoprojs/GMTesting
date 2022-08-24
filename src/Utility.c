@@ -1343,17 +1343,17 @@ else{
         for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
     }
  
-   // REprintf("1108 utility.c\n");
+    REprintf("1108 utility.c\n");
  if(isbiv[0]) {  // spatial bivariate  case
     //    lags=(double *) Calloc(npairs[0],sizeof   (double));
     lags=(double *)R_Calloc(npairs[0],   double);
     
-      //REprintf("1111 utility.c\n");
+      REprintf("1111 utility.c\n");
         //first=(int *) Calloc(npairs[0],sizeof(int));
-    first=(int *)R_Calloc(npairs[0],int);
-     // REprintf("1113 utility.c *npairs: %d\n",*npairs);
+    second = first=(int *)R_Calloc(npairs[0],int);
+      REprintf("1113 utility.c *npairs: %d\n",*npairs);
         //second=(int *) Calloc(npairs[0],sizeof(int));
-    second= (int *)R_Calloc(npairs[0],int);
+    //second= (int *)R_Calloc(npairs[0],int);
      // REprintf("1115 utility.c\n");
       
          for (i=0;i<*npairs;i++) {
