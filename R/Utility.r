@@ -1077,7 +1077,7 @@ StartParam <- function(coordx, coordy, coordt,coordx_dyn, corrmodel, data, dista
                       paramrange, radius, start, taper, tapsep, type,
                       typereal, varest, vartype, weighted, winconst, winstp,winconst_t, winstp_t,copula, X,memdist,nosym)
 {
-  print("1080 StartParam----")
+  # print("1080 StartParam----")
     ### START Includes internal functions:
     replicates=1
     # Check if the correlation is bivariate
@@ -1148,13 +1148,13 @@ if(method1=="euclidean")
     ### END Includes internal functions
     # Set the correlation and  if the correlation is space-time(T or F) or bivariate (T o F)  or univariate (case spacetime=F and bivariate=F)p
     corrmodel<-CkCorrModel(corrmodel)
-    print("1151 StartParam----")
+    # print("1151 StartParam----")
     bivariate <- CheckBiv(corrmodel); if(bivariate) coordt=c(1,2)
-    print("1153 StartParam----")
+    # print("1153 StartParam----")
     spacetime <- CheckST(corrmodel)
     isdyn=!is.null(coordx_dyn)
     space=!(spacetime||bivariate)
-    print("1157 StartParam----")
+    # print("1157 StartParam----")
     if(!bivariate)
        {
         if(is.null(X))  {X=1;num_betas=1}
@@ -1162,14 +1162,14 @@ if(method1=="euclidean")
         {if(is.list(X))  num_betas=ncol(X[[1]])
            else  num_betas=ncol(X) }
     }
-    print("1165 StartParam----")
+    # print("1165 StartParam----")
     if(bivariate){
         if(is.null(X))  {X=1;num_betas=c(1,1)}
         else
         { if(is.list(X))  num_betas=c(ncol(X[[1]]),ncol(X[[2]]))
             else  num_betas=c(ncol(X),ncol(X)) }}
     namesnuis <- NuisParam(model,bivariate,num_betas,copula)
-    print("1172 StartParam----")
+    # print("1172 StartParam----")
 
 
     ltimes=length(coordt)
@@ -1178,7 +1178,7 @@ if(method1=="euclidean")
                coordx=cc[,1];coordy=cc[,2]; 
              }
 
-    print("1181 StartParam----")
+    # print("1181 StartParam----")
     ### Set returning variables and initialize the model parameters:
     # Initialises the starting and fixed parameters' names
     error <- NULL
@@ -1186,7 +1186,7 @@ if(method1=="euclidean")
     namesfixed <- namesstart <- namessim <- NULL
     numfixed <- numstart <- 0
     # Set the model, likelihood, correlation and the nuisance parameters:
-    print("1189 StartParam----")
+    # print("1189 StartParam----")
     model <- CkModel(model)
     flagnuis <- NULL
     namescorr <- CorrelationPar(corrmodel)
@@ -1196,7 +1196,7 @@ if(method1=="euclidean")
     flagcorr <- NULL
     ### START settings the data structure:
     # set the coordinates sizes:
-    print("1199 StartParam----")
+    # print("1199 StartParam----")
     if(is.null(coordx_dyn))  
     {
 
@@ -1221,13 +1221,13 @@ if(method1=="euclidean")
        coordx <- coords[,1]; coordy <- coords[,2]
        numcoord <- numcoordx <- numcoordy <- length(coordx)
     }
-    print("1224 StartParam----")
+    # print("1224 StartParam----")
 
    if(!space && is.null(coordx_dyn)) {coordx=rep(coordx,ltimes);coordy=rep(coordy,ltimes);}
     
     NS=cumsum(ns)
     if(!space)   NS=c(0,NS)[-(length(ns)+1)]
-    print("1230 StartParam----")
+    # print("1230 StartParam----")
 
     # initialize tapering variables:
     tapering=ia=idx=ja=colidx=rowidx=integer(1)
@@ -1235,7 +1235,7 @@ if(method1=="euclidean")
     tapmodel=0
     cutoff <- FALSE
     distance<-CheckDistance(distance)
-    print("1238 StartParam----")
+    # print("1238 StartParam----")
     ### END settings the data structure
     # START code for the simulation procedure
     if(fcall=="Fitting"){
@@ -1474,7 +1474,7 @@ if(method1=="euclidean")
                                              
     }
     # END code for the fitting procedure
-    print("1477 StartParam----")
+    # print("1477 StartParam----")
 ##################################################################################################################
 # START code for the simulation procedure
     if(fcall=="Simulation"){
@@ -1507,13 +1507,13 @@ if(method1=="euclidean")
         K=neighb
 }  # END code for the simulation procedure
 #####################################################################################
-    print("1510 StartParam----")
+    # print("1510 StartParam----")
     numpairs <- integer(1)
     srange <- double(1)
     trange <- double(1)
 
 if(typereal=="Independence"){ maxdist=NULL;maxtime=NULL;K=neighb}
-    print("1516 StartParam----")
+    # print("1516 StartParam----")
 #################
 distC=FALSE
 if(!tapering)
@@ -1525,7 +1525,7 @@ if(!tapering)
     isinit <- as.integer(1)
     if(is.null(tapsep))  tapsep=c(0.5,0.5)
     else  {if(length(tapsep)==1) tapsep=c(tapsep,0)}
-    print("1528 StartParam----")
+    # print("1528 StartParam----")
     mem=FALSE
     if(tapering||memdist)  { mem=TRUE }   #### NB
 
@@ -1540,12 +1540,12 @@ if(!tapering)
            
     }
     
-    print("1543 StartParam----")
+    # print("1543 StartParam----")
     if(bivariate) {
     if(!srange[1]&&!srange[2])  srange=c(srange,0,0)
     if(is.na(srange[3])) srange[3]=srange[2];
     if(is.na(srange[4])) srange[4]=srange[2];}
-    print("1548 StartParam----")
+    # print("1548 StartParam----")
   
     ###
     if(CheckSph(corrmodel))   radius=1
@@ -1553,7 +1553,7 @@ if(!tapering)
 
     aa=double(5);for(i in 1:length(tapsep)) aa[i]=tapsep[i];tapsep=aa
  
-    print("1556 StartParam----")
+    # print("1556 StartParam----")
 
 if(fcall=="Fitting"&likelihood==2&!is.null(neighb)) mem=FALSE # Vecchia gp case
 if(fcall=="Fitting"&likelihood==2||fcall=="Simulation") mem=FALSE 
@@ -1578,14 +1578,14 @@ else{          # all the rest
 #############################################################
 ### aca paso solo para  simular o maximum likelihood o variogram 
 ### o si hay CL with  maxdist!!!
-  print("1581 StartParam----")
+  # print("1581 StartParam----")
   aux =list(distC,fcall,likelihood,typereal)
-  print(str(aux))
+  # print(str(aux))
 if(distC||fcall=="Simulation"||(fcall=="Fitting"&likelihood==2)||(fcall=="Fitting"&typereal=="GeoWLS")) {
-  print("1583 StartParam----")
+  # print("1583 StartParam----")
 if(fcall=="Fitting"&mem==TRUE&(!space)&!tapering)   {vv=length(NS); numcoord=NS[vv]+ns[vv]} # number of space time point in the case of coordxdyn
 
-  print("1586 StartParam----")
+  # print("1586 StartParam----")
 
 #gb=dotCall64::.C64('SetGlobalVar',SIGNATURE = c(
 #         "integer","double","double","double","integer", "integer","integer",  #7
@@ -1608,7 +1608,7 @@ if(fcall=="Fitting"&mem==TRUE&(!space)&!tapering)   {vv=length(NS); numcoord=NS[
 #             "r", "r", "r"),
 #             PACKAGE='GeoModels', VERBOSE = 0, NAOK = TRUE)
 
-  print("1609 StartParam----")
+  # print("1609 StartParam----")
 srange[which(srange==Inf)]=1e+50;trange[which(trange==Inf)]=1e+50
 gb=.C('SetGlobalVar',as.integer(bivariate), as.double(coordx), as.double(coordy), as.double(coordt),as.integer(grid),ia=as.integer(ia),idx=as.integer(idx),  #7
            isinit=as.integer(isinit),ja=as.integer(ja), as.integer(mem), as.integer(numcoord),as.integer( numcoordx),  as.integer(numcoordy), #6
@@ -1616,7 +1616,7 @@ gb=.C('SetGlobalVar',as.integer(bivariate), as.double(coordx), as.double(coordy)
             as.integer(numtime),as.double(trange), as.integer(tapering), as.integer(tapmodel),as.integer(distance),as.integer(weighted), #6
            colidx= as.integer(colidx),rowidx= as.integer(rowidx), # 2
             as.integer(ns), as.integer(NS), as.integer(isdyn))
-print("1617 StartParam----")
+# print("1617 StartParam----")
 
 rm(colidx);rm(rowidx)
 if(type=="Tapering") {rm(idx);rm(ja);rm(ia)}
@@ -1637,7 +1637,7 @@ numpairs <- gb$numpairs
     idx <- idx[1:numpairs]
     ja  <- ja[1:numpairs]
     K=neighb
-    print("1638 StartParam----")
+    # print("1638 StartParam----")
 }
 #######################################################################
 else   
@@ -1646,9 +1646,9 @@ else
 #### it works when CL  using neighb  or maxdist AND neighb 
 #############################################################
 { 
-  print("1649 StartParam----")
+  # print("1649 StartParam----")
 if(typereal!="Independence") {
-  print("1651 StartParam----")
+  # print("1651 StartParam----")
   ########################## 
 if(distance==0) distance1="Eucl";
 if(distance==2) distance1="Geod";
@@ -1656,23 +1656,23 @@ if(distance==1) distance1="Chor";
 
 if(all(neighb==0.5)) neighb=NULL ## ojo!!
 if(maxdist==Inf) maxdist=NULL
-print("1659 StartParam----")
+# print("1659 StartParam----")
 if(space)   #  spatial case
 {
 ##########################################
-  print("1663 StartParam----")
+  # print("1663 StartParam----")
   K=neighb
   x=cbind(coordx, coordy)
-  print("1665 StartParam----")
+  # print("1665 StartParam----")
   #tt0 <- proc.time()
   sol=GeoNeighIndex(coordx=x,distance=distance1,maxdist=maxdist,neighb=K,radius=radius)
 #tt0 <- proc.time()-tt0;print(tt0[3])
-  print("1669 StartParam----")
+  # print("1669 StartParam----")
  ###    deleting symmetric indexes with associate distances
  if(nosym){
-   print("1672 StartParam----")
+   # print("1672 StartParam----")
   aa=GeoNosymindices(cbind(sol$colidx,sol$rowidx),sol$lags)
-  print("1674 StartParam----")
+  # print("1674 StartParam----")
   sol$rowidx=c(aa$xy[,1])
   sol$colidx=c(aa$xy[,2])
   sol$lags=c(aa$d) }
@@ -1687,12 +1687,12 @@ if(space)   #  spatial case
   ## loading space distances in memory 
   mmm=1;ttt=1
 if(weighted)  mmm=max(sol$lags)
-  print("1689 StartParam----")
+  # print("1689 StartParam----")
   aux = list(as.integer(numcoord),  as.integer(numtime),  #2
              as.double(sol$lags),as.integer(nn),as.double(mmm),as.double(ttt),#6
              as.double(sol$lagt),as.integer(nn),#8
              as.integer(spacetime),as.integer(bivariate),as.integer(1),as.integer(1))#12
-  print(str(aux))
+  # print(str(aux))
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(numtime),  
     as.double(sol$lags),as.integer(nn),as.double(mmm),as.double(ttt),
     as.double(sol$lagt),as.integer(nn),
@@ -1731,16 +1731,16 @@ if(weighted) { mmm=max(sol$lags) ;ttt=max(sol$lagt)}
 ##############################################  
 if(bivariate)   # bivariate case 
 { 
-  print("1743 StartParam----")
+  # print("1743 StartParam----")
   K=neighb
   x=cbind(coordx, coordy)
   sol=GeoNeighIndex(coordx=x, coordx_dyn=coordx_dyn, distance=distance1,maxdist=maxdist,neighb=K,maxtime=maxtime,radius=radius,bivariate=TRUE)
-  print("1738 StartParam----")
+  # print("1738 StartParam----")
   ###    deleting symmetric indexes with associate distances
   if(nosym){
-    print("1741 StartParam----")
+    # print("1741 StartParam----")
   aa=GeoNosymindices(cbind(sol$colidx,sol$rowidx),sol$lags)
-  print("1743 StartParam----")
+  # print("1743 StartParam----")
   sol$rowidx=c(aa$xy[,1])
   sol$colidx=c(aa$xy[,2])
   sol$lags=c(aa$d)}
@@ -1754,22 +1754,22 @@ if(bivariate)   # bivariate case
 ## loading space time distances in memory   
   mmm=1
 if(weighted) { mmm=max(sol$lags) }
-  print("1757 StartParam----")
+  # print("1757 StartParam----")
   aux = list("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  #2
              as.double(sol$lags),as.integer(nn),as.double(mmm),#5
              as.double(1),as.integer(nn),as.double(1),#8
              as.integer(spacetime),as.integer(bivariate),#10
              as.integer(sol$first),as.integer(sol$second))#12
-  cat("\n--- Aquí\n")
-  print(str(aux))
-  print(summary(sol$first))
-  print(summary(sol$second))
-  cat("\n--- sol\n")
+  # cat("\n--- Aquí\n")
+  # print(str(aux))
+  # print(summary(sol$first))
+  # print(summary(sol$second))
+  # cat("\n--- sol\n")
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  
     as.double(sol$lags),as.integer(nn),as.double(mmm),
     as.double(1),as.integer(nn),as.double(1),
     as.integer(spacetime),as.integer(bivariate),as.integer(sol$first),as.integer(sol$second)) 
-  print("1762 StartParam----")
+  # print("1762 StartParam----")
 } #### end bivariate case
 
     numpairs <- gb$numpairs
@@ -1787,7 +1787,7 @@ if(is.null(coordt)) coordt=1
 
  }
 }
-    print("1764 StartParam----")
+    # print("1764 StartParam----")
 ########################################################################################
 ########################################################################################
 ########################################################################################

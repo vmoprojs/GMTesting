@@ -12,7 +12,7 @@ GeoFit <- function(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL,copul
                          type='Pairwise', upper=NULL, varest=FALSE, vartype='SubSamp', weighted=FALSE, winconst=NULL, winstp=NULL, 
                          winconst_t=NULL, winstp_t=NULL,X=NULL,nosym=FALSE)
 {
-  print("IN 15-----")
+  # print("IN 15-----")
     call <- match.call()
 
     if(!is.null(copula))
@@ -51,13 +51,13 @@ GeoFit <- function(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL,copul
     if(is.null(coordx_dyn)){
     coordx=unname(coordx);coordy=unname(coordy)}
 
-    print("IN 54----")
+    # print("IN 54----")
     initparam <- WlsStart(coordx, coordy, coordt, coordx_dyn, corrmodel, data, distance, "Fitting", fixed, grid,#10
                          likelihood, maxdist,neighb,maxtime,  model, n, NULL,#16
                          parscale, optimizer=='L-BFGS-B', radius, start, taper, tapsep,#22
                          type, varest, vartype, weighted, winconst, winstp,winconst_t, winstp_t, copula,X,memdist,nosym)#32
-print(str(initparam))
-    print("IN 60-----")
+# print(str(initparam))
+    # print("IN 60-----")
         ## moving sill from starting to fixed parameters if necessary (in some model sill mus be 1 )
         if(sum(initparam$namesparam=='sill')==1)
         {
@@ -169,7 +169,7 @@ if(!is.null(anisopars)) {
                                    unname(initparam$X),sensitivity,MM,aniso)
     if(memdist)
         {
-      print("--- 172 ")
+      # print("--- 172 ")
       fitted <- CompLik2(copula,initparam$bivariate,initparam$coordx,initparam$coordy,initparam$coordt,
                                    coordx_dyn,initparam$corrmodel,unname(initparam$data), #6
                                    initparam$distance,initparam$flagcorr,initparam$flagnuis,initparam$fixed,GPU,grid, #12
