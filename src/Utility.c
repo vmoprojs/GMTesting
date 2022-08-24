@@ -1130,7 +1130,7 @@ else{
       first=R_Calloc(*npairs,int);
       REprintf("1113 utility.c *npairs: %d\n",*npairs);
         //second=(int *) Calloc(*npairs,int);
-      second=R_Calloc(*npairs,int);
+      second=R_Calloc(1800,int);
       REprintf("1115 utility.c\n");
 
          for (i=0;i<*npairs;i++) {
