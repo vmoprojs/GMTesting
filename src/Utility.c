@@ -1114,12 +1114,12 @@ void SetGlobalVar2 (int *nsite, int *times,//2
         for (i=0;i<*npairs;i++) lags[i]=h[i];
     }
 
-else{*/
+else{
     if(isst[0]) {  /// spatio teemporal case
         lags=(double *) Calloc(*npairs,double);
         lagt=(double *) Calloc(*npairs,double);
         for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
-    }
+    }*/
  
     REprintf("1108 utility.c\n");
   if(isbiv[0]) {  // spatial bivariate  case
