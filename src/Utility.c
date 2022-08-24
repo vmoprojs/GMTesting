@@ -1087,42 +1087,42 @@ void SetGlobalVar2 (int *nsite, int *times,//2
 
    int i=0;
 
-  //ncoord=(int *) Calloc(1,int);//number of total spatial coordinates
-  //ncoord[0]=*nsite;
-  //ntime=(int *) Calloc(1,int);//number of times
-  //ntime[0]=*times;
+    int *ncoord=calloc(1,int);//number of total spatial coordinates
+  ncoord[0]=*nsite;
+    int *ntime=calloc(1,int);//number of times
+  ntime[0]=*times;
 
-  //maxdist=(double *) Calloc(1,double);
-  //maxdist[0]=*maxh;
+    double *maxdist=calloc(1,double);
+  maxdist[0]=*maxh;
 
-  // maxtime=(double *) Calloc(1,double);
-  //maxtime[0]=*maxu;
+    double *maxtime=calloc(1,double);
+  maxtime[0]=*maxu;
 
     int *npairs=calloc(1,sizeof(int));  // number of pairs involved
   npairs[0]=nn[0];
    
-    //isbiv=(int *) Calloc(1,int);//is a bivariate random field?
-    //isbiv[0]=biv[0];
+    int *isbiv=calloc(1,int);//is a bivariate random field?
+    isbiv[0]=biv[0];
 
-   //isst=(int *) Calloc(1,int);//is a spatio-temporal random field?
-    //isst[0]=st[0];
+    int *isst=calloc(1,int);//is a spatio-temporal random field?
+    isst[0]=st[0];
 
 
 
-/*    if(!isst[0]&&!isbiv[0]) {  /// spatial case
-        lags=(double *) Calloc(*npairs,double);
+   if(!isst[0]&&!isbiv[0]) {  /// spatial case
+       double *lags=calloc(*npairs,double);
         for (i=0;i<*npairs;i++) lags[i]=h[i];
     }
 
 else{
     if(isst[0]) {  /// spatio teemporal case
-        lags=(double *) Calloc(*npairs,double);
-        lagt=(double *) Calloc(*npairs,double);
+        double *lags=calloc(*npairs,double);
+        double *lagt=calloc(*npairs,double);
         for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
-    }*/
+    }
  
     REprintf("1108 utility.c\n");
- // if(isbiv[0]) {  // spatial bivariate  case
+ if(isbiv[0]) {  // spatial bivariate  case
     //    lags=(double *) Calloc(npairs[0],sizeof   (double));
     double *lags=calloc(npairs[0],sizeof   (double));
     
@@ -1142,12 +1142,11 @@ else{
         }
       REprintf("1123 utility.c\n");
 
-     // }
+      }
     REprintf("1122 utility.c\n");
-   //}
+   }
     REprintf("1125 utility.c\n");
       return;
-    
 }
 
 /*#######################################################################*/
