@@ -1762,6 +1762,9 @@ if(weighted) { mmm=max(sol$lags) }
              as.integer(sol$first),as.integer(sol$second))#12
   cat("\n--- Aquí\n")
   print(str(aux))
+  print(summary(sol$first))
+  print(summary(sol$second))
+  cat("\n--- sol\n")
   ss=.C("SetGlobalVar2", as.integer(numcoord),  as.integer(2),  
     as.double(sol$lags),as.integer(nn),as.double(mmm),
     as.double(1),as.integer(nn),as.double(1),
