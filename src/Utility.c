@@ -1120,12 +1120,13 @@ else{
         lags=(double *) Calloc(*npairs,double);
         lagt=(double *) Calloc(*npairs,double);
         for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
-    }
+    }}
  
     REprintf("1108 utility.c\n");
   
       return;
     REprintf("1125 utility.c\n");
+    
 }
 
 /*#######################################################################*/
