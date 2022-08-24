@@ -1085,18 +1085,18 @@ void SetGlobalVar2 (int *nsite, int *times,//2
 {
 
 
-    int i=0;
+   int i=0;
 
-  ncoord=(int *) Calloc(1,int);//number of total spatial coordinates
-  ncoord[0]=*nsite;
-  ntime=(int *) Calloc(1,int);//number of times
-  ntime[0]=*times;
+  //ncoord=(int *) Calloc(1,int);//number of total spatial coordinates
+  //ncoord[0]=*nsite;
+  //ntime=(int *) Calloc(1,int);//number of times
+  //ntime[0]=*times;
 
-  maxdist=(double *) Calloc(1,double);
-  maxdist[0]=*maxh;
+  //maxdist=(double *) Calloc(1,double);
+  //maxdist[0]=*maxh;
 
-   maxtime=(double *) Calloc(1,double);
-  maxtime[0]=*maxu;
+  // maxtime=(double *) Calloc(1,double);
+  //maxtime[0]=*maxu;
 
   npairs=(int *) Calloc(1,int);  // number of pairs involved
   npairs[0]=nn[0];
@@ -1104,17 +1104,17 @@ void SetGlobalVar2 (int *nsite, int *times,//2
     isbiv=(int *) Calloc(1,int);//is a bivariate random field?
     isbiv[0]=biv[0];
 
-   isst=(int *) Calloc(1,int);//is a spatio-temporal random field?
-    isst[0]=st[0];
+   //isst=(int *) Calloc(1,int);//is a spatio-temporal random field?
+    //isst[0]=st[0];
 
 
 
-    if(!isst[0]&&!isbiv[0]) {  /// spatial case
+/*    if(!isst[0]&&!isbiv[0]) {  /// spatial case
         lags=(double *) Calloc(*npairs,double);
         for (i=0;i<*npairs;i++) lags[i]=h[i];
     }
 
-else{
+else{*/
     if(isst[0]) {  /// spatio teemporal case
         lags=(double *) Calloc(*npairs,double);
         lagt=(double *) Calloc(*npairs,double);
@@ -1140,7 +1140,7 @@ else{
 
       }
     REprintf("1122 utility.c\n");
-   }
+   //}
     REprintf("1125 utility.c\n");
       return;
     
