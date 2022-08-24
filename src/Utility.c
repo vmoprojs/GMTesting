@@ -1098,8 +1098,8 @@ void SetGlobalVar2 (int *nsite, int *times,//2
    maxtime=(double *) Calloc(1,double);
   maxtime[0]=*maxu;
 
-  npairs=R_Calloc(1,int);  // number of pairs involved
-  npairs[0]=1800;
+  npairs=(int *) Calloc(1,int);  // number of pairs involved
+  npairs[0]=*nn;
    
     isbiv=(int *) Calloc(1,int);//is a bivariate random field?
     isbiv[0]=biv[0];
@@ -1123,14 +1123,14 @@ else{
  
     REprintf("1108 utility.c\n");
   if(isbiv[0]) {  /// spatial bivariate  case
-        //lags=(double *) Calloc(*npairs,double);
-      lags=R_Calloc(1800,double);
+        lags=(double *) Calloc(*npairs,double);
+      //lags=R_Calloc(*npairs,double);
       REprintf("1111 utility.c\n");
-        //first=(int *) Calloc(*npairs,int);
-      first=R_Calloc(1800,int);
+        first=(int *) Calloc(*npairs,int);
+      //first=R_Calloc(*npairs,int);
       REprintf("1113 utility.c *npairs: %d\n",*npairs);
-        //second=(int *) Calloc(*npairs,int);
-      second=R_Calloc(1800,int);
+        second=(int *) Calloc(*npairs,int);
+      //second=R_Calloc(*npairs,int);
       REprintf("1115 utility.c\n");
 
          for (i=0;i<*npairs;i++) {
@@ -1158,11 +1158,11 @@ void DeleteGlobalVar2()
   if(!isst[0]&&!isbiv[0]) { Free(lags);}
   else {
   if(isst[0]) {Free(lags);Free(lagt);}
-  if(isbiv[0]){R_Free(lags);R_Free(first);R_Free(second);}
+  if(isbiv[0]){Free(lags);Free(first);Free(second);}
   }
   Free(isbiv);
   Free(isst);
-    R_Free(npairs);
+    Free(npairs);
   return;
 }
 
