@@ -56,7 +56,7 @@ GeoFit <- function(data, coordx, coordy=NULL, coordt=NULL, coordx_dyn=NULL,copul
                          likelihood, maxdist,neighb,maxtime,  model, n, NULL,#16
                          parscale, optimizer=='L-BFGS-B', radius, start, taper, tapsep,#22
                          type, varest, vartype, weighted, winconst, winstp,winconst_t, winstp_t, copula,X,memdist,nosym)#32
-
+print(str(initparam))
     print("IN 60-----")
         ## moving sill from starting to fixed parameters if necessary (in some model sill mus be 1 )
         if(sum(initparam$namesparam=='sill')==1)
@@ -168,7 +168,9 @@ if(!is.null(anisopars)) {
                                    initparam$winconst_t,initparam$winstp_t,initparam$ns,
                                    unname(initparam$X),sensitivity,MM,aniso)
     if(memdist)
-        fitted <- CompLik2(copula,initparam$bivariate,initparam$coordx,initparam$coordy,initparam$coordt,
+        {
+      print("--- 172 ")
+      fitted <- CompLik2(copula,initparam$bivariate,initparam$coordx,initparam$coordy,initparam$coordt,
                                    coordx_dyn,initparam$corrmodel,unname(initparam$data), #6
                                    initparam$distance,initparam$flagcorr,initparam$flagnuis,initparam$fixed,GPU,grid, #12
                                    initparam$likelihood,local, initparam$lower,initparam$model,initparam$n,#17
@@ -177,7 +179,7 @@ if(!is.null(anisopars)) {
                                    initparam$param,initparam$spacetime,initparam$type,#27
                                    initparam$upper,varest,initparam$vartype,initparam$weighted,initparam$winconst,initparam$winstp,#33
                                    initparam$winconst_t,initparam$winstp_t,initparam$ns,
-                                   unname(initparam$X),sensitivity,initparam$colidx,initparam$rowidx,initparam$neighb,MM,aniso)
+                                   unname(initparam$X),sensitivity,initparam$colidx,initparam$rowidx,initparam$neighb,MM,aniso)}
       }
 
  if(likelihood=='Marginal'&&type=="Independence")
