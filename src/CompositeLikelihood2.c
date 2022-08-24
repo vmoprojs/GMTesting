@@ -2158,10 +2158,10 @@ void Comp_Pair_Gauss_biv2mem(int *cormod, double *data1,double *data2,int *NN,
     double *par, int *weigthed,double *res,double *mean1,double *mean2,
     double *nuis, int *local,int *GPU)
 {
-    Rprintf("biv2mem--2161\n")
+    Rprintf("biv2mem--2161\n");
     int i=0;
     double  dens=0.0,weights=1.0;
-    Rprintf("biv2mem--2164\n")
+    Rprintf("biv2mem--2164\n");
     Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second[i]);
     if(  par[0]<0|| par[1]<0|| par[2]<0|| par[3]<0) {*res=LOW;  return;}
     Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second[i]);
