@@ -1098,8 +1098,9 @@ void SetGlobalVar2 (int *nsite, int *times,//2
    maxtime=(double *) Calloc(1,double);
   maxtime[0]=*maxu;
 
-  npairs=(int *) Calloc(1,int);  // number of pairs involved
-  npairs[0]=100;
+  //npairs=(int *) Calloc(1,int);  // number of pairs involved
+    npairs = (int*)malloc(1 * sizeof(int));
+  npairs[0]=nn[0];
    
     isbiv=(int *) Calloc(1,int);//is a bivariate random field?
     isbiv[0]=biv[0];
@@ -1123,14 +1124,17 @@ else{
  
     REprintf("1108 utility.c\n");
   if(isbiv[0]) {  /// spatial bivariate  case
-        lags=(double *) Calloc(*npairs,double);
+        //lags=(double *) Calloc(*npairs,double);
       //lags=R_Calloc(*npairs,double);
+      lags = (double*)malloc(*npairs * sizeof(double));
       REprintf("1111 utility.c\n");
-        first=(int *) Calloc(*npairs,int);
+        //first=(int *) Calloc(*npairs,int);
       //first=R_Calloc(*npairs,int);
+      first = (int*)malloc(*npairs * sizeof(int));
       REprintf("1113 utility.c *npairs: %d\n",*npairs);
-        second=(int *) Calloc(*npairs,int);
+        //second=(int *) Calloc(*npairs,int);
       //second=R_Calloc(*npairs,int);
+      second = (int*)malloc(*npairs * sizeof(int));
       REprintf("1115 utility.c\n");
 
          for (i=0;i<*npairs;i++) {
