@@ -1123,14 +1123,17 @@ else{
  
     REprintf("1108 utility.c\n");
   if(isbiv[0]) {  /// spatial bivariate  case
-        lags=(double *) Calloc(nn[0],double);
+        //lags=(double *) Calloc(*npairs,double);
+      lags=R_Calloc(*npairs,double);
       REprintf("1111 utility.c\n");
-        first=(int *) Calloc(nn[0],int);
-      REprintf("1113 utility.c *npairs: %d\n",nn[0]);
-        second=(int *) Calloc(nn[0],int);
+        //first=(int *) Calloc(*npairs,int);
+      first=R_Calloc(*npairs,int);
+      REprintf("1113 utility.c *npairs: %d\n",*npairs);
+        //second=(int *) Calloc(*npairs,int);
+      second=R_Calloc(*npairs,int);
       REprintf("1115 utility.c\n");
 
-         for (i=0;i<nn[0];i++) {
+         for (i=0;i<*npairs;i++) {
             lags[i]=h[i];
             first[i]=one[i];
             second[i]=two[i];
@@ -1155,7 +1158,7 @@ void DeleteGlobalVar2()
   if(!isst[0]&&!isbiv[0]) { Free(lags);}
   else {
   if(isst[0]) {Free(lags);Free(lagt);}
-  if(isbiv[0]){Free(lags);Free(first);Free(second);}
+  if(isbiv[0]){R_Free(lags);R_Free(first);R_Free(second);}
   }
   Free(isbiv);
   Free(isst);
