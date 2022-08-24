@@ -1078,7 +1078,7 @@ void DeleteGlobalVar()
   return;
 }
 /*#######################################################################*/
-/*void SetGlobalVar2 (int *nsite, int *times,//2
+void SetGlobalVar2 (int *nsite, int *times,//2
                     double *h,int *nn, double  *maxh,//5
                     double *u,int *tt,  double *maxu,//8
                     int *st,int *biv,int *one,int *two)//12
@@ -1148,7 +1148,7 @@ else{
    }
    // REprintf("1125 utility.c\n");
       return;
-}*/
+}
 
 
 
@@ -1300,7 +1300,7 @@ else{
 }*/
 
 
-void SetGlobalVar2 (int *nsite, int *times,//2
+/*void SetGlobalVar2 (int *nsite, int *times,//2
                     double *h,int *nn, double  *maxh,//5
                     double *u,int *tt,  double *maxu,//8
                     int *st,int *biv,int *one,int *two)//12
@@ -1370,7 +1370,7 @@ else{
    }
    // REprintf("1125 utility.c\n");
       return;
-}
+}*/
 
 /*#######################################################################*/
 
