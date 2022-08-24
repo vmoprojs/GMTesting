@@ -1037,14 +1037,20 @@ else {  // distance for composite likelihood
 if(isst[0])  {SpaceTime_Dist(coordx,coordy,coordt,ia,idx,ismal,ja,tapmodel,
                                         ns,NS,colidx,rowidx,srange,trange);
                Free(tlags); Free(tlagt);}
-if(isbiv[0]) {SpaceBiv_Dist(coordx,coordy,coordt,ia,idx,ismal,ja,tapmodel,
+if(isbiv[0]) {
+    REprintf("1041\n");
+    SpaceBiv_Dist(coordx,coordy,coordt,ia,idx,ismal,ja,tapmodel,
                                      ns,NS,colidx,rowidx,srange);
-               Free(tlags);Free(tfirst);Free(tsecond);}
+    REprintf("1044\n");
+               Free(tlags);Free(tfirst);Free(tsecond);
+    REprintf("1046\n");
+}
   if(!ismal[0]) return;
  } //end spatio temporal case or bivariate case
 
 
   npair[0]=npairs[0];
+      REprintf("1053\n");
   return;
      }
 }
