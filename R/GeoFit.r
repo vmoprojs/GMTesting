@@ -211,11 +211,11 @@ if(!is.null(anisopars)) {
     # Delete the global variables:
 
      
-    if( !(likelihood=='Marginal'&&type=="Independence"))
-    {             
-     if(memdist) .C('DeleteGlobalVar2', PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE) # my distances
-     else        .C('DeleteGlobalVar' , PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE) # distances with rann
-    }
+    # if( !(likelihood=='Marginal'&&type=="Independence"))
+    # {             
+    #  if(memdist) .C('DeleteGlobalVar2', PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE) # my distances
+    #  else        .C('DeleteGlobalVar' , PACKAGE='GeoModels', DUP = TRUE, NAOK=TRUE) # distances with rann
+    # }
 
 ff=as.list(initparam$fixed)
 if(!is.null(MM)) ff$mean=MM
