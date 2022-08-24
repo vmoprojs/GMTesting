@@ -1087,37 +1087,37 @@ void SetGlobalVar2 (int *nsite, int *times,//2
 
    int i=0;
 
-    int *ncoord=calloc(1,int);//number of total spatial coordinates
+    int *ncoord=calloc(1,sizeof(int));//number of total spatial coordinates
   ncoord[0]=*nsite;
-    int *ntime=calloc(1,int);//number of times
+    int *ntime=calloc(1,sizeof(int));//number of times
   ntime[0]=*times;
 
-    double *maxdist=calloc(1,double);
+    double *maxdist=calloc(1,sizeof   (double));
   maxdist[0]=*maxh;
 
-    double *maxtime=calloc(1,double);
+    double *maxtime=calloc(1,sizeof   (double));
   maxtime[0]=*maxu;
 
     int *npairs=calloc(1,sizeof(int));  // number of pairs involved
   npairs[0]=nn[0];
    
-    int *isbiv=calloc(1,int);//is a bivariate random field?
+    int *isbiv=calloc(1,sizeof(int));//is a bivariate random field?
     isbiv[0]=biv[0];
 
-    int *isst=calloc(1,int);//is a spatio-temporal random field?
+    int *isst=calloc(1,sizeof(int));//is a spatio-temporal random field?
     isst[0]=st[0];
 
 
 
    if(!isst[0]&&!isbiv[0]) {  /// spatial case
-       double *lags=calloc(*npairs,double);
+       double *lags=calloc(*npairs,sizeof   (double));
         for (i=0;i<*npairs;i++) lags[i]=h[i];
     }
 
 else{
     if(isst[0]) {  /// spatio teemporal case
-        double *lags=calloc(*npairs,double);
-        double *lagt=calloc(*npairs,double);
+        double *lags=calloc(*npairs,sizeof   (double));
+        double *lagt=calloc(*npairs,sizeof   (double));
         for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
     }
  
