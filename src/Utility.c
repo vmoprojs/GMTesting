@@ -1385,11 +1385,11 @@ void DeleteGlobalVar2()
   if(!isst[0]&&!isbiv[0]) { Free(lags);}
   else {
   if(isst[0]) {Free(lags);Free(lagt);}
-  if(isbiv[0]){R_Free(lags);R_Free(first);R_Free(second);}
+  if(isbiv[0]){free(lags);free(first);free(second);}
   }
   Free(isbiv);
   Free(isst);
-    R_Free(npairs);
+    free(npairs);
   return;
 }
 
