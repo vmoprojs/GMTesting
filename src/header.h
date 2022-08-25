@@ -365,6 +365,7 @@ extern int *ismem;//is with memoty allocation
 extern int *isst;//is a spatio-temporal random field?
 extern int *istap;//is tapering?
 extern double *lags;// vector of spatial distances for tapering
+extern double *lags_1;// vector of spatial distances for tapering
 extern double *lagt;// vector of temporal distance for tapering
 //double **mlags;// vector of spatial distances
 //double **mlagt;// vector of temporal distances
