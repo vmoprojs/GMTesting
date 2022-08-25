@@ -1173,8 +1173,10 @@ void SetGlobalVar2 (int *nsite, int *times,//2
     double *maxtime=malloc(1*sizeof   (double));
   maxtime[0]=*maxu;
 
-    int *npairs=malloc(1*sizeof(int));  // number of pairs involved
-  npairs[0]=nn[0];
+   // int *npairs=malloc(1*sizeof(int));  // number of pairs involved
+  //npairs[0]=nn[0];
+    
+    int *npairs=nn[0];
    
     int *isbiv=malloc(1*sizeof(int));//is a bivariate random field?
     isbiv[0]=biv[0];
