@@ -1324,7 +1324,7 @@ void SetGlobalVar2 (int *nsite, int *times,//2
 
     //npairs=(int *)R_Calloc(1,int);  // number of pairs involved
   //npairs[0]=nn[0];
-    (int *)npairs[0]=nn[0];
+    int * npairs=nn[0];
    
     isbiv=(int *)R_Calloc(1,int);//is a bivariate random field?
     isbiv[0]=biv[0];
