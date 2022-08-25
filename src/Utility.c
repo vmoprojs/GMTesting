@@ -1321,7 +1321,7 @@ void SetGlobalVar2 (int *nsite, int *times,//2
 
    maxtime=( double *)R_Calloc(1,   double);
   maxtime[0]=*maxu;
-
+    REprintf("1324 utility.c\n");
     //npairs=(int *)R_Calloc(1,int);  // number of pairs involved
   //npairs[0]=nn[0];
     int * npairs=nn[0];
@@ -1356,7 +1356,7 @@ else{
     second = first=(int *)R_Calloc(npairs[0],int);
       REprintf("1113 utility.c *npairs: %d\n",*npairs);
         //second=(int *) Calloc(npairs[0],sizeof(int));
-     first= (int *)R_Calloc(npairs[0],int);
+     //first= (int *)R_Calloc(npairs[0],int);
      // REprintf("1115 utility.c\n");
       
          for (i=0;i<*npairs;i++) {
