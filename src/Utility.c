@@ -1348,6 +1348,7 @@ else{
  
     REprintf("1108 utility.c\n");
  if(isbiv[0]) {  // spatial bivariate  case
+     REprintf("1351 utility.c\n")
     //    lags=(double *) Calloc(npairs[0],sizeof   (double));
     lags=(double *)R_Calloc(npairs[0],   double);
     
