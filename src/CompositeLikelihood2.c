@@ -2197,8 +2197,8 @@ void Comp_Pair_SkewGauss_biv2mem(int *cormod, double *data1,double *data2,int *N
                              u=data1[i];
                              w=data2[i];
                                 if(!ISNAN(u)&&!ISNAN(w) ){
-                                    rhotv=CorFct(cormod,lags[i],0,par,first[i],second[i]);
-                     *res+= log(biv_skew2(rhotv,u,w,vari[first[i]],vari[second[i]],1,nuis[first[i]],nuis[second[i]]))*weights;
+                                    rhotv=CorFct(cormod,lags_1[i],0,par,first_1[i],second_1[i]);
+                     *res+= log(biv_skew2(rhotv,u,w,vari[first_1[i]],vari[second_1[i]],1,nuis[first_1[i]],nuis[second_1[i]]))*weights;
                                 }}
 
         Free(vari);
