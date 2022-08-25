@@ -357,6 +357,7 @@ static const double AA[] = {
 
 extern double **dista;// 2x2 matrix of distance weight (for c)and commpact suppots (tap)
 extern int *first;//vector of index in the bivariate case
+extern int *second;//vector of index in the bivariate case
 extern int *second_1;//vector of index in the bivariate case
 extern int *isbiv;//is bivariate?
 extern int *ismem;//is with memoty allocation
