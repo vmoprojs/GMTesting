@@ -113,13 +113,13 @@ comploglik_biv2 <- function(param,colidx,rowidx, corrmodel, coords,data1,data2,f
        #             as.double(other_nuis),
        #             as.integer(local),as.integer(GPU),
       #            PACKAGE='GeoModels',DUP = TRUE, NAOK=TRUE)$res
-        print("Lik2 --- 116")
+        
         result=dotCall64::.C64(as.character(fan),
           SIGNATURE = c("integer","double","double", "integer","double","integer","double","double","double","double","integer","integer"),  
                         corrmodel,data1, data2, n,paramcorr,weigthed, res=res,Mean[colidx],Mean[rowidx],other_nuis,local,GPU,
           INTENT =    c("r","r","r","r","r","r","rw", "r", "r","r", "r","r"),
              PACKAGE='GeoModels', VERBOSE = 0, NAOK = TRUE)$res
-        print("Lik2 --- 122")
+        
         return(-result)
       }
 
