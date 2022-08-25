@@ -1151,7 +1151,7 @@ else{
 }*/
 
 
-
+/*
 
 void SetGlobalVar2 (int *nsite, int *times,//2
                     double *h,int *nn, double  *maxh,//5
@@ -1227,7 +1227,7 @@ else{
       return;
 }
 
-
+*/
 
 /*void SetGlobalVar2 (int *nsite, int *times,//2
                     double *h,int *nn, double  *maxh,//5
@@ -1302,7 +1302,7 @@ else{
 }*/
 
 
-/*void SetGlobalVar2 (int *nsite, int *times,//2
+void SetGlobalVar2 (int *nsite, int *times,//2
                     double *h,int *nn, double  *maxh,//5
                     double *u,int *tt,  double *maxu,//8
                     int *st,int *biv,int *one,int *two)//12
@@ -1322,8 +1322,9 @@ else{
    maxtime=( double *)R_Calloc(1,   double);
   maxtime[0]=*maxu;
 
-    npairs=(int *)R_Calloc(1,int);  // number of pairs involved
-  npairs[0]=nn[0];
+    //npairs=(int *)R_Calloc(1,int);  // number of pairs involved
+  //npairs[0]=nn[0];
+    int *npairs[0]=nn[0];
    
     isbiv=(int *)R_Calloc(1,int);//is a bivariate random field?
     isbiv[0]=biv[0];
@@ -1355,7 +1356,7 @@ else{
     second = first=(int *)R_Calloc(npairs[0],int);
       REprintf("1113 utility.c *npairs: %d\n",*npairs);
         //second=(int *) Calloc(npairs[0],sizeof(int));
-    //second= (int *)R_Calloc(npairs[0],int);
+     first= (int *)R_Calloc(npairs[0],int);
      // REprintf("1115 utility.c\n");
       
          for (i=0;i<*npairs;i++) {
@@ -1372,7 +1373,7 @@ else{
    }
    // REprintf("1125 utility.c\n");
       return;
-}*/
+}
 
 
 
@@ -1387,11 +1388,11 @@ void DeleteGlobalVar2()
   if(!isst[0]&&!isbiv[0]) { Free(lags);}
   else {
   if(isst[0]) {Free(lags);Free(lagt);}
-  if(isbiv[0]){free(lags);free(first);free(second);}
+  if(isbiv[0]){free(lags);Free(first);Free(second);}
   }
   Free(isbiv);
   Free(isst);
-    free(npairs);
+  Free(npairs);
   return;
 }
 
