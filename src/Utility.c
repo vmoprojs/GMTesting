@@ -1364,7 +1364,7 @@ else{
             lags[i]=h[i];
             first_1[i]=one[i];
             second_1[i]=two[i];
-            REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first[i],second_1[i]);
+            REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first_1[i],second_1[i]);
 
         }
      // REprintf("1123 utility.c\n");
