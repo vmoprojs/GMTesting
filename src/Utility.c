@@ -1362,8 +1362,8 @@ else{
       
          for (i=0;i<*npairs;i++) {
             lags[i]=h[i];
-            first[i]=one[i];
-            second[i]=two[i];
+            first_1[i]=one[i];
+            second_1[i]=two[i];
             REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first[i],second_1[i]);
 
         }
@@ -1389,7 +1389,7 @@ void DeleteGlobalVar2()
   if(!isst[0]&&!isbiv[0]) { Free(lags);}
   else {
   if(isst[0]) {Free(lags);Free(lagt);}
-  if(isbiv[0]){free(lags);Free(first);Free(second_1);}
+  if(isbiv[0]){free(lags);Free(first_1);Free(second_1);}
   }
   Free(isbiv);
   Free(isst);
