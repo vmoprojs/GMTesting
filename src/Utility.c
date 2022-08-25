@@ -1364,7 +1364,7 @@ else{
             lags[i]=h[i];
             first[i]=one[i];
             second[i]=two[i];
-            REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first[i],second[i]);
+            REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first[i],second_1[i]);
 
         }
      // REprintf("1123 utility.c\n");
@@ -1389,7 +1389,7 @@ void DeleteGlobalVar2()
   if(!isst[0]&&!isbiv[0]) { Free(lags);}
   else {
   if(isst[0]) {Free(lags);Free(lagt);}
-  if(isbiv[0]){free(lags);Free(first);Free(second);}
+  if(isbiv[0]){free(lags);Free(first);Free(second_1);}
   }
   Free(isbiv);
   Free(isst);
