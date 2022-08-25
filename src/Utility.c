@@ -968,22 +968,21 @@ else {  //spatio temporal case or bivariate case
                    else maxtime[0]=-LOW; 
         }
        if(isbiv[0])              {
-           REprintf("971 \n");
                                    int i=0;
                                    dista= (double **) Calloc(ntime[0],double *);
-           REprintf("974 \n");
+           
                                    if(dista==NULL) {*ismal=0; return;}
                                    for(i=0;i<ntime[0];i++){
                                    dista[i]=(double *) Calloc(ntime[0],double);
                                    if(dista[i]==NULL) {*ismal=0; return;}}
-           REprintf("979 \n");
+           
                                   if(srange[1]) maxdist[0]=srange[1];
                                   else maxdist[0]=-LOW;
                                   if(srange[2]) maxdist[1]=srange[2];
                                   else maxdist[1]=-LOW;
                                   if(srange[3]) maxdist[2]=srange[3];
                                   else maxdist[2]=-LOW;
-           REprintf("986 \n");
+           
                                   dista[0][0]=maxdist[0];dista[0][1]=maxdist[1];dista[1][0]=dista[0][1];dista[1][1]=maxdist[2]; 
                                   }
      if(istap[0])  // tapering case
@@ -1008,29 +1007,29 @@ else {  //spatio temporal case or bivariate case
        }  // end tapering
 else {  // distance for composite likelihood
             
-    REprintf("1011\n");
+    
                if(isst[0])  npairs[0]=(int)(qq * (qq-1) * 0.5);
                if(isbiv[0]) npairs[0]=(int)(qq * (qq-1) * 0.5);
-    REprintf("1014\n");
+    
                tlags= (double *) Calloc(*npairs,double *);
-    REprintf("1016\n");
+    
               if(tlags==NULL) {*ismal=0; return;}
           // allocates the matrix of temporal distances:
           if(isst[0]) {
              //memory allocation of matrix temporal distances
-              REprintf("1021\n");
+              
              tlagt= (double *) Calloc(*npairs,double *);
-              REprintf("1022\n");
+              
              if(tlagt==NULL) {*ismal=0; return;}
                      }
           if(isbiv[0]) {
-              REprintf("1025\n");
+              
             tfirst=(int *) Calloc(*npairs,int);
-              REprintf("1027\n");
+              
             if(tfirst==NULL){*ismal=0; return;}
-              REprintf("1029\n");
+              
             tsecond=(int *) Calloc(*npairs,int);
-              REprintf("1031\n");
+              
             if(tsecond==NULL){*ismal=0; return;}
                       }
        }
@@ -1038,19 +1037,19 @@ if(isst[0])  {SpaceTime_Dist(coordx,coordy,coordt,ia,idx,ismal,ja,tapmodel,
                                         ns,NS,colidx,rowidx,srange,trange);
                Free(tlags); Free(tlagt);}
 if(isbiv[0]) {
-    REprintf("1041\n");
+    
     SpaceBiv_Dist(coordx,coordy,coordt,ia,idx,ismal,ja,tapmodel,
                                      ns,NS,colidx,rowidx,srange);
-    REprintf("1044\n");
+    
                Free(tlags);Free(tfirst);Free(tsecond);
-    REprintf("1046\n");
+    
 }
   if(!ismal[0]) return;
  } //end spatio temporal case or bivariate case
 
 
   npair[0]=npairs[0];
-      REprintf("1053\n");
+      
   return;
      }
 }
@@ -1078,229 +1077,6 @@ void DeleteGlobalVar()
   return;
 }
 /*#######################################################################*/
-/*void SetGlobalVar2 (int *nsite, int *times,//2
-                    double *h,int *nn, double  *maxh,//5
-                    double *u,int *tt,  double *maxu,//8
-                    int *st,int *biv,int *one,int *two)//12
-{
-
-
-   int i=0;
-
-    int *ncoord=calloc(1,sizeof(int));//number of total spatial coordinates
-  ncoord[0]=*nsite;
-    int *ntime=calloc(1,sizeof(int));//number of times
-  ntime[0]=*times;
-
-    double *maxdist=calloc(1,sizeof   (double));
-  maxdist[0]=*maxh;
-
-    double *maxtime=calloc(1,sizeof   (double));
-  maxtime[0]=*maxu;
-
-    int *npairs=calloc(1,sizeof(int));  // number of pairs involved
-  npairs[0]=nn[0];
-   
-    int *isbiv=calloc(1,sizeof(int));//is a bivariate random field?
-    isbiv[0]=biv[0];
-
-    int *isst=calloc(1,sizeof(int));//is a spatio-temporal random field?
-    isst[0]=st[0];
-
-
-
-   if(!isst[0]&&!isbiv[0]) {  /// spatial case
-       double *lags=calloc(*npairs,sizeof   (double));
-        for (i=0;i<*npairs;i++) lags[i]=h[i];
-    }
-
-else{
-    if(isst[0]) {  /// spatio teemporal case
-        double *lags=calloc(*npairs,sizeof   (double));
-        double *lagt=calloc(*npairs,sizeof   (double));
-        for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
-    }
- 
-   // REprintf("1108 utility.c\n");
- if(isbiv[0]) {  // spatial bivariate  case
-    //    lags=(double *) Calloc(npairs[0],sizeof   (double));
-    double *lags=calloc(npairs[0],sizeof   (double));
-    
-      //REprintf("1111 utility.c\n");
-        //first=(int *) Calloc(npairs[0],sizeof(int));
-    int *first=calloc(npairs[0],sizeof(int));
-     // REprintf("1113 utility.c *npairs: %d\n",*npairs);
-        //second=(int *) Calloc(npairs[0],sizeof(int));
-    int *second= calloc(npairs[0],sizeof(int));
-     // REprintf("1115 utility.c\n");
-      
-         for (i=0;i<*npairs;i++) {
-            lags[i]=h[i];
-            first[i]=one[i];
-            second[i]=two[i];
-            //REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first[i],second[i]);
-
-        }
-     // REprintf("1123 utility.c\n");
-
-      }
-    //REprintf("1122 utility.c\n");
-   }
-   // REprintf("1125 utility.c\n");
-      return;
-}*/
-
-
-/*
-
-void SetGlobalVar2 (int *nsite, int *times,//2
-                    double *h,int *nn, double  *maxh,//5
-                    double *u,int *tt,  double *maxu,//8
-                    int *st,int *biv,int *one,int *two)//12
-{
-
-
-   int i=0;
-
-    int *ncoord=malloc(1*sizeof(int));//number of total spatial coordinates
-  ncoord[0]=*nsite;
-    int *ntime=malloc(1*sizeof(int));//number of times
-  ntime[0]=*times;
-
-    double *maxdist=malloc(1*sizeof   (double));
-  maxdist[0]=*maxh;
-
-    double *maxtime=malloc(1*sizeof   (double));
-  maxtime[0]=*maxu;
-
-   // int *npairs=malloc(1*sizeof(int));  // number of pairs involved
-  //npairs[0]=nn[0];
-    
-    int *npairs=nn[0];
-   
-    int *isbiv=malloc(1*sizeof(int));//is a bivariate random field?
-    isbiv[0]=biv[0];
-
-    int *isst=malloc(1*sizeof(int));//is a spatio-temporal random field?
-    isst[0]=st[0];
-
-
-
-   if(!isst[0]&&!isbiv[0]) {  /// spatial case
-       double *lags=malloc(npairs[0]*sizeof   (double));
-        for (i=0;i<*npairs;i++) lags[i]=h[i];
-    }
-
-else{
-    if(isst[0]) {  /// spatio teemporal case
-        double *lags=malloc(npairs[0]*sizeof   (double));
-        double *lagt=malloc(npairs[0]*sizeof   (double));
-        for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
-    }
- 
-   // REprintf("1108 utility.c\n");
- if(isbiv[0]) {  // spatial bivariate  case
-    //    lags=(double *) Calloc(npairs[0],sizeof   (double));
-    double *lags=malloc(npairs[0]*sizeof   (double));
-    
-      //REprintf("1111 utility.c\n");
-        //first=(int *) Calloc(npairs[0],sizeof(int));
-    int *first=malloc(npairs[0]*sizeof(int));
-     // REprintf("1113 utility.c *npairs: %d\n",*npairs);
-        //second=(int *) Calloc(npairs[0],sizeof(int));
-    int *second= malloc(npairs[0]*sizeof(int));
-     // REprintf("1115 utility.c\n");
-      
-         for (i=0;i<npairs[0];i++) {
-            lags[i]=h[i];
-            first[i]=one[i];
-            second[i]=two[i];
-            //REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first[i],second[i]);
-
-        }
-     // REprintf("1123 utility.c\n");
-
-      }
-    //REprintf("1122 utility.c\n");
-   }
-   // REprintf("1125 utility.c\n");
-      return;
-}
-
-*/
-
-/*void SetGlobalVar2 (int *nsite, int *times,//2
-                    double *h,int *nn, double  *maxh,//5
-                    double *u,int *tt,  double *maxu,//8
-                    int *st,int *biv,int *one,int *two)//12
-{
-
-
-   int i=0;
-
-    ncoord=(int *)R_alloc(1,sizeof(int));//number of total spatial coordinates
-  ncoord[0]=*nsite;
-    ntime=(int *)R_alloc(1,sizeof(int));//number of times
-  ntime[0]=*times;
-
-    maxdist=(double *)R_alloc(1,sizeof   (double));
-  maxdist[0]=*maxh;
-
-   maxtime=( double *)R_alloc(1,sizeof   (double));
-  maxtime[0]=*maxu;
-
-    npairs=(int *)R_alloc(1,sizeof(int));  // number of pairs involved
-  npairs[0]=nn[0];
-   
-    isbiv=(int *)R_alloc(1,sizeof(int));//is a bivariate random field?
-    isbiv[0]=biv[0];
-
-    isst=(int *)R_alloc(1,sizeof(int));//is a spatio-temporal random field?
-    isst[0]=st[0];
-
-
-
-   if(!isst[0]&&!isbiv[0]) {  /// spatial case
-       lags=(double *)R_alloc(npairs[0],sizeof   (double));
-        for (i=0;i<*npairs;i++) lags[i]=h[i];
-    }
-
-else{
-    if(isst[0]) {  /// spatio teemporal case
-        lags=(double *)R_alloc(npairs[0],sizeof   (double));
-        lagt=(double *)R_alloc(npairs[0],sizeof   (double));
-        for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
-    }
- 
-   // REprintf("1108 utility.c\n");
- if(isbiv[0]) {  // spatial bivariate  case
-    //    lags=(double *) Calloc(npairs[0],sizeof   (double));
-    lags=(double *)R_alloc(npairs[0],sizeof   (double));
-    
-      //REprintf("1111 utility.c\n");
-        //first=(int *) Calloc(npairs[0],sizeof(int));
-    first=(int *)R_alloc(npairs[0],sizeof(int));
-     // REprintf("1113 utility.c *npairs: %d\n",*npairs);
-        //second=(int *) Calloc(npairs[0],sizeof(int));
-    second= (int *)R_alloc(npairs[0],sizeof(int));
-     // REprintf("1115 utility.c\n");
-      
-         for (i=0;i<*npairs;i++) {
-            lags[i]=h[i];
-            first[i]=one[i];
-            second[i]=two[i];
-            REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first[i],second[i]);
-
-        }
-     // REprintf("1123 utility.c\n");
-
-      }
-    //REprintf("1122 utility.c\n");
-   }
-   // REprintf("1125 utility.c\n");
-      return;
-}*/
-
 
 void SetGlobalVar2 (int *nsite, int *times,//2
                     double *h,int *nn, double  *maxh,//5
@@ -1321,7 +1097,7 @@ void SetGlobalVar2 (int *nsite, int *times,//2
 
    maxtime=( double *)R_Calloc(1,   double);
   maxtime[0]=*maxu;
-    REprintf("1324 utility.c\n");
+    
     npairs=(int *)R_Calloc(1,int);  // number of pairs involved
   npairs[0]=nn[0];
   //  int * npairs=nn[0];
@@ -1346,33 +1122,18 @@ else{
         for (i=0;i<*npairs;i++) {lags[i]=h[i];lagt[i]=u[i];}
     }
  
-    REprintf("1108 utility.c\n");
- if(isbiv[0]) {  // spatial bivariate  case
-     REprintf("1351 utility.c\n");
-    //    lags=(double *) Calloc(npairs[0],sizeof   (double));
-    lags_1=(double *)R_Calloc(npairs[0],   double);
     
-      REprintf("1111 utility.c\n");
-        //first=(int *) Calloc(npairs[0],sizeof(int));
+ if(isbiv[0]) {  // spatial bivariate  case
+    lags_1=(double *)R_Calloc(npairs[0],   double);
     second_1 =(int *)R_Calloc(npairs[0],int);
-      REprintf("1113 utility.c *npairs: %d\n",*npairs);
-        //second=(int *) Calloc(npairs[0],sizeof(int));
      first_1= (int *)R_Calloc(npairs[0],int);
-     // REprintf("1115 utility.c\n");
-      
          for (i=0;i<*npairs;i++) {
             lags_1[i]=h[i];
             first_1[i]=one[i];
             second_1[i]=two[i];
-            //REprintf("lags[i] %f  first[i] %d second[i] %d\n",lags[i], first_1[i],second_1[i]);
-
         }
-     // REprintf("1123 utility.c\n");
-
       }
-    //REprintf("1122 utility.c\n");
    }
-   // REprintf("1125 utility.c\n");
       return;
 }
 
