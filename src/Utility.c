@@ -475,9 +475,9 @@ void SpaceBiv_Dist(double *coordx,double *coordy,double *coordt,int *ia,int *idx
   first =(int *)  Calloc(count,int);
   second=(int *)  Calloc(count,int);
   lags=(double *) Calloc(count,double);
-  for(i=0;i<count;i++) { lags[i]=tlags[i];
-                         first[i]=tfirst[i];
-                         second[i]=tsecond[i];}
+  for(i=0;i<count;i++) { lags_1[i]=tlags[i];
+                         first_1[i]=tfirst[i];
+                         second_1[i]=tsecond[i];}
   //Free(tlags);Free(tfirst);Free(tsecond);
   return;
 }
