@@ -2163,14 +2163,14 @@ void Comp_Pair_Gauss_biv2mem(int *cormod, double *data1,double *data2,int *NN,
     Rprintf("---%f %f \n",data1[i],data2[i]);
     double  dens=0.0,weights=1.0;
     Rprintf("biv2mem--2164\n");
-    Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second[i]);
+    Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second_1[i]);
     if(  par[0]<0|| par[1]<0|| par[2]<0|| par[3]<0) {*res=LOW;  return;}
-    Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second[i]);
+    Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second_1[i]);
 
  for(i=0;i<npairs[0];i++){
-       Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second[i]);
+       Rprintf("%f %f %f %d %d  \n",lags[i],data1[i],data2[i],first[i],second_1[i]);
   if(!ISNAN(data1[i])&&!ISNAN(data2[i]) ){
-          dens=log_biv2gauss(cormod,lags[i],par, data1[i]-mean1[i], data2[i]-mean2[i],first[i], second[i]);
+          dens=log_biv2gauss(cormod,lags[i],par, data1[i]-mean1[i], data2[i]-mean2[i],first[i], second_1[i]);
           *res+= dens*weights;
                                 }}
 
@@ -2197,8 +2197,8 @@ void Comp_Pair_SkewGauss_biv2mem(int *cormod, double *data1,double *data2,int *N
                              u=data1[i];
                              w=data2[i];
                                 if(!ISNAN(u)&&!ISNAN(w) ){
-                                    rhotv=CorFct(cormod,lags[i],0,par,first[i],second[i]);
-                     *res+= log(biv_skew2(rhotv,u,w,vari[first[i]],vari[second[i]],1,nuis[first[i]],nuis[second[i]]))*weights;
+                                    rhotv=CorFct(cormod,lags[i],0,par,first[i],second_1[i]);
+                     *res+= log(biv_skew2(rhotv,u,w,vari[first[i]],vari[second_1[i]],1,nuis[first[i]],nuis[second_1[i]]))*weights;
                                 }}
 
         Free(vari);
