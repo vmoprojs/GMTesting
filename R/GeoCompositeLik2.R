@@ -78,7 +78,7 @@ comploglik2 <- function(param,colidx,rowidx, corrmodel, coords,data1,data2,fixed
 
          else
          {
-         result=dotCall64::.C64(as.character(fan),
+         result=dotCall64::.C64(as.character("Comp_Cond_LogLogistic2mem"),
          SIGNATURE = c("integer","double","double", "integer","double","integer","double","double","double","double","integer","integer"),  
                         corrmodel,data1, data2, n,paramcorr,weigthed, res=res,Mean[colidx], Mean[rowidx], other_nuis,local,GPU,
           INTENT =    c("r","r","r","r","r","r","rw", "r", "r","r", "r","r"),
@@ -450,10 +450,11 @@ coords=cbind(coordx,coordy)
                                   namesnuis=namesnuis,namesparam=namesparam,namesaniso=namesaniso,weigthed=weigthed,X=X, local=local,GPU=GPU,MM=MM,aniso=aniso)
 
       if(optimizer=='Nelder-Mead')
+        {
         CompLikelihood <- optim(par=param, fn=eval(as.name(lname)),  colidx=colidx,rowidx=rowidx,corrmodel=corrmodel,  coords=coords,
           control=list( reltol=1e-14, maxit=100000), data1=data1,data2=data2, fixed=fixed, fan=fname,
                               hessian=TRUE, method='Nelder-Mead',n=n,namescorr=namescorr,
-                                  namesnuis=namesnuis,namesparam=namesparam,namesaniso=namesaniso,weigthed=weigthed,X=X, local=local,GPU=GPU,MM=MM,aniso=aniso)
+                                  namesnuis=namesnuis,namesparam=namesparam,namesaniso=namesaniso,weigthed=weigthed,X=X, local=local,GPU=GPU,MM=MM,aniso=aniso)}
  #if(optimizer=='multinlminb'){
   #     CompLikelihood <- mcGlobaloptim::multiStartoptim(objectivefn=eval(as.name(lname)),
    #     colidx=colidx,rowidx=rowidx,corrmodel=corrmodel, coords=coords, data1=data1,data2=data2, fixed=fixed,
